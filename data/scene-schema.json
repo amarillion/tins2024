@@ -1,0 +1,121 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "scene-schema",
+	"title": "Scene schema",
+	"description": "Configuration for a scene in allegro shader toy",
+	"type": "object",
+	"$defs": {
+		"node": {
+			"oneOf": [
+				{ "$ref": "#/$defs/shaderNode" },
+				{ "$ref": "#/$defs/bitmapNode" },
+				{ "$ref": "#/$defs/rectNode" }
+				{ "$ref": "#/$defs/textNode" }
+			],
+			"unevaluatedProperties": false,
+			"properties": {
+				"type": {
+					"type": "string",
+					"enum": [ "shader", "bitmap", "text", "rect" ],
+					"description": "Type of node in the scene graph: a shader effect, a bitmap image, a text label, or a filled rectangle"
+				}
+			}
+		},
+		"shaderNode": {
+			"type": "object",
+			"required": ["type", "fragSrc"],
+			"properties": {
+				"type": {
+					"const": "shader"
+				},
+				"fragSrc": {
+					"type": "string",
+					"description": "GLSL source file for a fragment shader."
+				},
+				"vertSrc": {
+					"type": "string",
+					"description": "GLSL source file for a vertex shader."
+				},
+				"shaderConfig": {
+					"type": "object",
+					"description": "Shader configuration, to pass uniform values to the shader"
+				},
+				"children": {
+					"type": "array",
+					"items": {
+						"$ref": "#/$defs/node"
+					}
+				}
+			}
+		},
+		"bitmapNode": {
+			"type": "object",
+			"required": ["type", "src"],
+			"properties": {
+				"type": { "const": "bitmap" },
+				"x": { "type": "number" },
+				"y": { "type": "number" },
+				"src": {
+					"type": "string",
+					"description": "Path to a file. Relative paths are relative to the location of the scene file."
+				},
+				"children": {
+					"type": "array",
+					"items": {
+						"$ref": "#/$defs/node"
+					}
+				}
+			}
+		},
+		"rectNode": {
+			"type": "object",
+			"required": ["type", "x", "y", "w", "h"],
+			"properties": {
+				"type": { "const": "rect" },
+				"x": { "type": "number" },
+				"y": { "type": "number" },
+				"w": { "type": "number" },
+				"h": { "type": "number" },
+				"children": {
+					"type": "array",
+					"items": {
+						"$ref": "#/$defs/node"
+					}
+				},
+				"fill": { "type": "string", "description": "Rectangle fill color, in HTML '#rrggbb' format." }
+			}
+		},
+		"textNode": {
+			"type": "object",
+			"required": ["type", "x", "y"],
+			"properties": {
+				"type": { "const": "text" },
+				"x": { "type": "number" },
+				"y": { "type": "number" },
+				"children": {
+					"type": "array",
+					"items": {
+						"$ref": "#/$defs/node"
+					}
+				},
+				"font": { "type": "string", "description": "path of a ttf file for the font you use" },
+				"fontSize": { "type": "number" },
+				"color": { "type": "string", "description": "Text color, in HTML '#rrggbb' format." }
+			}
+		}
+	},
+	"properties": {
+		"config": {
+			"description": "Global configuration - just a placeholder at the moment",
+			"type": "object"
+		},
+		"scene": {
+			"description": "Scene hierarchy",
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/node"
+			}
+		}
+	},
+	"unevaluatedProperties": false
+}
