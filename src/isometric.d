@@ -426,13 +426,13 @@ static MyGrid initMap(int dim) {
 
 	foreach(p; PointRange(map.size))
 	{
-		map[p].z = 1;
+		map[p].z = 0;
 		map[p].dzleft = 0;
 		map[p].dzright = 0;
 		map[p].dzbot = 0;
 	}
 	
-	raiseTile(map, 5, 5);
+	// raiseTile(map, 5, 5);
 	map[Point(5, 5)].building = 1;
 	map[Point(8, 3)].building = 2;
 	map[Point(9, 9)].building = 3;
