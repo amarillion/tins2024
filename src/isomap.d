@@ -5,6 +5,9 @@ Does not depend on allegro.
 */
 module isomap;
 
+import std.conv;
+import std.algorithm;
+
 import helix.util.grid;
 import helix.util.vec;
 import helix.util.coordrange;
@@ -24,8 +27,10 @@ struct Tile
 	short dzright = 0;
 	short dzbot = 0;
 
-	int building = 0;
-
+	bool isVerticalSplit() const
+	{
+		return dzbot == 0;
+	}
 
 	/** helper to calculate the z height at any corner of a Cell. */
 	int getZ(int dx, int dy)
@@ -42,6 +47,77 @@ struct Tile
 		}
 	}
 
+	// lift corner of a single tile
+	void liftCorner(int delta, int side)
+	{
+		switch (side)
+		{
+		case 0:
+			z += delta;
+			dzleft -= delta;
+			dzright -= delta;
+			dzbot -= delta;
+			break;
+		case 1:
+			dzright += delta;
+			break;
+		case 2:
+			dzbot += delta;
+			break;
+		case 3:
+			dzleft += delta;
+			break;
+		default:
+			assert (false);
+		}
+	}
+
+	void setCorner(int value, int side)
+	{
+		int delta = value - z;
+		switch (side)
+		{
+		case 0:
+			z += delta;
+			dzleft -= delta;
+			dzright -= delta;
+			dzbot -= delta;
+			break;
+		case 1:
+			dzright = to!short(delta);
+			break;
+		case 2:
+			dzbot = to!short(delta);
+			break;
+		case 3:
+			dzleft = to!short(delta);
+			break;
+		default:
+			assert (false);
+		}
+	}
+
+	// return the z of the highest corner.
+	int getMaxHeight()
+	{
+		return max(z, max (z + dzbot, max (z + dzleft, z + dzright)));
+	}
+
+	// return the z of the lowest corner
+	int getMinHeight()
+	{
+		return min(z, min (z + dzbot, min (z + dzleft, z + dzright)));
+	}
+
+	bool isFlat()
+	{
+		return (dzbot == 0 && dzleft == 0 && dzright == 0);
+	}
+
+	/***********************
+	 * spefic to this game
+	 ***********************/
+	int building = 0;
 
 }
 

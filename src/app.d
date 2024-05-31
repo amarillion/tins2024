@@ -43,6 +43,7 @@ void main(string[] args)
 		mainloop.resources.addFile("data/casas1.png");
 		mainloop.resources.addFile("data/church.png");
 		mainloop.resources.addFile("data/station1.png");
+		mainloop.resources.addFile("data/tileset.png");
 
 		mainloop.styles.applyResource("style");
 
