@@ -39,6 +39,11 @@ void main(string[] args)
 		mainloop.resources.addFile("data/style.json");
 		mainloop.resources.addFile("data/title-layout.json");
 		mainloop.resources.addFile("data/dialog-layout.json");
+
+		mainloop.resources.addFile("data/casas1.png");
+		mainloop.resources.addFile("data/church.png");
+		mainloop.resources.addFile("data/station1.png");
+
 		mainloop.styles.applyResource("style");
 
 		mainloop.onDisplaySwitch.add((switchIn) { if (switchIn) { writeln("Window switched in event called"); mainloop.resources.refreshAll(); }});
