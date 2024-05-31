@@ -12,8 +12,8 @@ import helix.component;
 
 import dialog;
 import dialogBuilder;
-import isometric;
 import isocanvas;
+import isomap;
 
 class MainState : DialogBuilder {
 

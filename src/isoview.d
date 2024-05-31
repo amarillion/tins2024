@@ -1,4 +1,8 @@
-module isometric;
+/**
+ * Responsible for isometric drawing primitives and coordinate conversion.
+ * Refers to Tile. Does not depend on / refer to Map.
+ */
+module isoview;
 
 import allegro5.allegro;
 import allegro5.allegro_primitives;
@@ -15,43 +19,13 @@ const int TILEX = 32;
 const int TILEY = 32;
 const int TILEZ = 16;
 
-/**
- * Draw a surface.
- *
- * z is the height, in tile units, of the top corner.
- *
- * dzleft, dzright and dzbot are the z-delta, in tile units, of the left,
- * right and bottom corners
- */
-struct TCell
+import isomap : Tile;
+
+class IsoView
 {
-	int z = 0;
-	short dzleft = 0;
-	short dzright = 0;
-	short dzbot = 0;
-
-	int building = 0;
-};
-
-/** helper to calculate the z height at any corner of a Cell. */
-int getZ(T)(T c, int dx, int dy)
-{
-	assert (dx == 0 || dx == 1);
-	assert (dy == 0 || dy == 1);
-	
-	switch (dx + 2 * dy)
-	{
-		case 1: return c.z + c.dzright;
-		case 2: return c.z + c.dzleft;
-		case 3: return c.z + c.dzbot;
-		default: return c.z;
-	}
-}
-
-alias MyGrid = Grid!(2, TCell);
-
-class IsoCoords
-{
+private:
+	int sizex;
+	int sizey;
 public:
 	this(int sizex, int sizey)
 	{
@@ -69,8 +43,6 @@ public:
 
 	/** distance from the cell at 0,0 to the edge of the virtual screen */
 	int getYorig () const { return 64; }
-
-
 
 	int canvasFromMapX (int mx, int my) const
 	{
@@ -108,12 +80,8 @@ public:
 		ry = getYorig() + (x * 0.5 + y * 0.5 - z);
 	}
 
-private:
-	int sizex;
-	int sizey;
-
 	//TODO
-	void drawSurface(int mx, int my, ref TCell c)
+	void drawSurface(int mx, int my, ref Tile c)
 	{
 		int[2][] deltas;
 		ALLEGRO_COLOR color1;
@@ -181,7 +149,7 @@ private:
 
 	}
 
-	void drawLeftWall(/* GraphicsContext *gc, */ int mx, int my, ref TCell c)
+	void drawLeftWall(/* GraphicsContext *gc, */ int mx, int my, ref Tile c)
 	{
 		int[4] x;
 		int[4] y;
@@ -209,7 +177,7 @@ private:
 		drawIsoPoly( /* gc, */ x, y, z, color);
 	}
 
-	void drawRightWall(/* GraphicsContext *gc, */ int mx, int my, ref TCell c)
+	void drawRightWall(/* GraphicsContext *gc, */ int mx, int my, ref Tile c)
 	{
 		int[4] x;
 		int[4] y;
@@ -256,17 +224,6 @@ private:
 	    al_draw_prim(cast(const(void*))coord, null, null, 0, 4, ALLEGRO_PRIM_TYPE.ALLEGRO_PRIM_TRIANGLE_STRIP);
 	}
 
-}
-
-
-void drawMap(IsoCoords iso, MyGrid map) {
-
-	foreach (p; PointRange(map.size)) {
-		auto c = map[p];
-		iso.drawSurface(p.x, p.y, c);
-		iso.drawLeftWall(p.x, p.y, c);
-		iso.drawRightWall(p.x, p.y, c);
-	}
 }
 
 float LIGHTX = 0.2;
@@ -420,43 +377,3 @@ void screenToIso (int rx, int ry, ref float x, ref float y)
 	x = ry + rx / 2;
 	y = ry - rx / 2;
 }
-
-static MyGrid initMap(int dim) {
-	MyGrid map = new MyGrid(dim, dim);
-
-	foreach(p; PointRange(map.size))
-	{
-		map[p].z = 0;
-		map[p].dzleft = 0;
-		map[p].dzright = 0;
-		map[p].dzbot = 0;
-	}
-	
-	// raiseTile(map, 5, 5);
-	map[Point(5, 5)].building = 1;
-	map[Point(8, 3)].building = 2;
-	map[Point(9, 9)].building = 3;
-
-	return map;
-}
-
-	/** raise one corner in a map */
-void raiseCorner(MyGrid map, int x, int y) {
-	map[Point(x, y)].z += 1;
-	map[Point(x, y)].dzright -=1;
-	map[Point(x, y)].dzbot -= 1;
-	map[Point(x, y)].dzleft -= 1;
-	
-	map[Point(x - 1, y)].dzright += 1;
-	map[Point(x - 1, y - 1)].dzbot += 1;
-	map[Point(x, y - 1)].dzleft += 1;
-}
-
-/** raise one tile in a map */
-void raiseTile(MyGrid map, int x, int y) {
-	raiseCorner(map, x, y);
-	raiseCorner(map, x + 1, y);
-	raiseCorner(map, x + 1, y + 1);
-	raiseCorner(map, x, y + 1);
-}
-

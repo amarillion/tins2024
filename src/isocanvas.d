@@ -12,21 +12,33 @@ import allegro5.allegro_color;
 import helix.mainloop;
 import helix.component;
 import helix.util.vec;
+import helix.util.coordrange;
 
-import isometric;
+import isoview;
+import isomap;
+
+void drawMap(IsoView iso, MyGrid map) {
+
+	foreach (p; PointRange(map.size)) {
+		auto c = map[p];
+		iso.drawSurface(p.x, p.y, c);
+		iso.drawLeftWall(p.x, p.y, c);
+		iso.drawRightWall(p.x, p.y, c);
+	}
+}
 
 class IsoCanvas : Component
 {		
 	int cursorx = 0;
 	int cursory = 0;
 	MyGrid map;
-	IsoCoords iso;
+	IsoView iso;
 	
 	this(MainLoop window, MyGrid _map)
 	{
 		super(window, "isocanvas");
 		map = _map;
-		iso = new IsoCoords(map.size.x, map.size.y);
+		iso = new IsoView(map.size.x, map.size.y);
 	}
 	
 	override void update() {}
