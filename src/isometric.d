@@ -7,6 +7,10 @@ import std.math;
 import std.stdio;
 import std.conv;
 
+import helix.util.grid;
+import helix.util.vec;
+import helix.util.coordrange;
+
 const int TILEX = 32;
 const int TILEY = 32;
 const int TILEZ = 16;
@@ -19,13 +23,14 @@ const int TILEZ = 16;
  * dzleft, dzright and dzbot are the z-delta, in tile units, of the left,
  * right and bottom corners
  */
-struct Cell
+struct TCell
 {
 	int z = 0;
 	short dzleft = 0;
 	short dzright = 0;
 	short dzbot = 0;
 
+	int building = 0;
 };
 
 /** helper to calculate the z height at any corner of a Cell. */
@@ -43,48 +48,29 @@ int getZ(T)(T c, int dx, int dy)
 	}
 }
 
-class Map(T)
+alias MyGrid = Grid!(2, TCell);
+
+class IsoCoords
 {
-protected:
-	T[] data;
-	int sizex;
-	int sizey;
 public:
-	this (int w, int h)
+	this(int sizex, int sizey)
 	{
-		assert (w >= 0);
-		assert (h >= 0);
-		data = new T[w * h];
-		sizex = w;
-		sizey = h;
-	}
-
-	this ()
-	{
-		data = null;
-		sizex = 0;
-		sizey = 0;
-	}
-
-	ref T get (int x, int y)
-	{
-		assert (x >= 0);
-		assert (y >= 0);
-		assert (x < sizex);
-		assert (y < sizey);
-		assert (data);
-		return data[x + sizex * y];
-	}
-
-	void init (int w, int h)
-	{
-		sizex = w;
-		sizey = h;
-		data = new T[sizex * sizey];
+		this.sizex = sizex;
+		this.sizey = sizey;
 	}
 
 	int getSizeX() { return sizex; }
 	int getSizeY() { return sizey; }
+
+	int getw() const { return sizex * 64; }
+	int geth() const { return sizey * 32; }
+	/** distance from the cell at 0,0 to the edge of the virtual screen */
+	int getXorig () const { return getw() / 2 + 32; }
+
+	/** distance from the cell at 0,0 to the edge of the virtual screen */
+	int getYorig () const { return 64; }
+
+
 
 	int canvasFromMapX (int mx, int my) const
 	{
@@ -116,23 +102,18 @@ public:
 		return  (y - getYorig() - (x - getXorig()) / 2) / 32;
 	}
 
-	int getw() const { return sizex * 64; }
-	int geth() const { return sizey * 32; }
-
-	/** distance from the cell at 0,0 to the edge of the virtual screen */
-	int getXorig () const { return getw() / 2 + 32; }
-
-	/** distance from the cell at 0,0 to the edge of the virtual screen */
-	int getYorig () const { return 64; }
-
 	void canvasFromIso_f (float x, float y, float z, ref float rx, ref float ry)
 	{
 		rx = getXorig() + (x - y);
 		ry = getYorig() + (x * 0.5 + y * 0.5 - z);
 	}
 
+private:
+	int sizex;
+	int sizey;
+
 	//TODO
-	void drawSurface(T)(int mx, int my, ref T c)
+	void drawSurface(int mx, int my, ref TCell c)
 	{
 		int[2][] deltas;
 		ALLEGRO_COLOR color1;
@@ -200,7 +181,7 @@ public:
 
 	}
 
-	void drawLeftWall(/* GraphicsContext *gc, */ int mx, int my, ref T c)
+	void drawLeftWall(/* GraphicsContext *gc, */ int mx, int my, ref TCell c)
 	{
 		int[4] x;
 		int[4] y;
@@ -228,7 +209,7 @@ public:
 		drawIsoPoly( /* gc, */ x, y, z, color);
 	}
 
-	void drawRightWall(/* GraphicsContext *gc, */ int mx, int my, ref T c)
+	void drawRightWall(/* GraphicsContext *gc, */ int mx, int my, ref TCell c)
 	{
 		int[4] x;
 		int[4] y;
@@ -278,19 +259,14 @@ public:
 }
 
 
-void drawMap(T)(Map!T map)
-{
+void drawMap(IsoCoords iso, MyGrid map) {
 
-	for (int mx = 0; mx < map.getSizeX(); ++mx)
-		for (int my = 0; my < map.getSizeY(); ++my)
-		{
-			auto c = map.get(mx, my);
-			map.drawSurface (mx, my, c);
-			map.drawLeftWall (mx, my, c);
-			map.drawRightWall (mx, my, c);
-		}
-		
-
+	foreach (p; PointRange(map.size)) {
+		auto c = map[p];
+		iso.drawSurface(p.x, p.y, c);
+		iso.drawLeftWall(p.x, p.y, c);
+		iso.drawRightWall(p.x, p.y, c);
+	}
 }
 
 float LIGHTX = 0.2;
@@ -444,3 +420,43 @@ void screenToIso (int rx, int ry, ref float x, ref float y)
 	x = ry + rx / 2;
 	y = ry - rx / 2;
 }
+
+static MyGrid initMap(int dim) {
+	MyGrid map = new MyGrid(dim, dim);
+
+	foreach(p; PointRange(map.size))
+	{
+		map[p].z = 1;
+		map[p].dzleft = 0;
+		map[p].dzright = 0;
+		map[p].dzbot = 0;
+	}
+	
+	raiseTile(map, 5, 5);
+	map[Point(5, 5)].building = 1;
+	map[Point(8, 3)].building = 2;
+	map[Point(9, 9)].building = 3;
+
+	return map;
+}
+
+	/** raise one corner in a map */
+void raiseCorner(MyGrid map, int x, int y) {
+	map[Point(x, y)].z += 1;
+	map[Point(x, y)].dzright -=1;
+	map[Point(x, y)].dzbot -= 1;
+	map[Point(x, y)].dzleft -= 1;
+	
+	map[Point(x - 1, y)].dzright += 1;
+	map[Point(x - 1, y - 1)].dzbot += 1;
+	map[Point(x, y - 1)].dzleft += 1;
+}
+
+/** raise one tile in a map */
+void raiseTile(MyGrid map, int x, int y) {
+	raiseCorner(map, x, y);
+	raiseCorner(map, x + 1, y);
+	raiseCorner(map, x + 1, y + 1);
+	raiseCorner(map, x, y + 1);
+}
+

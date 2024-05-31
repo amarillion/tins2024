@@ -14,7 +14,6 @@ import dialog;
 import dialogBuilder;
 import isometric;
 import isocanvas;
-import game;
 
 class MainState : DialogBuilder {
 
@@ -22,7 +21,7 @@ class MainState : DialogBuilder {
 	{		
 		override void update() {}
 		
-		this(MainLoop window, Map!TCell map)
+		this(MainLoop window, MyGrid map)
 		{
 			super(window, "mapscreen");
 			// add (new ClearScreen(window, ALLEGRO_COLOR(0.25, 1, 0.25, 1)));
@@ -46,7 +45,7 @@ class MainState : DialogBuilder {
 		/* MENU */
 		buildDialog(window.resources.jsons["title-layout"]);
 		
-		auto map = Game.initMap(10);
+		auto map = initMap(10);
 
 		auto canvas = getElementById("canvas");
 		canvas.addChild(new MapScreen(window, map));
