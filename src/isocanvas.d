@@ -19,11 +19,6 @@ import helix.allegro.bitmap;
 import isogrid;
 import isomap;
 
-const string[9] BUILDING_NAMES = [
-	"casas1", "casas2", "casas3", "casas4",
-	"casas5", "casas6", "church", "tree1", "tree2"
-];
-
 void drawMap(const GraphicsContext gc, IsoGrid iso, MyGrid map)
 {
 	for (int mx = 0; mx < map.size.x; ++mx)
@@ -83,9 +78,9 @@ class IsoCanvas : Component
 		TL[ 7] = window.resources.bitmaps["TL2R"];
 
 		Bitmap buildingSheet = window.resources.bitmaps["building"];
-		for (int i = 0; i < 9; ++i)
-		{
-			buildings[i] = buildingSheet.subBitmap(i * 128, 0, 128, buildingSheet.h);
+		int[] VALID_BUILDINGS = [0,12,14,22,13,15,21,7,8];
+		for (int i = 0; i < VALID_BUILDINGS.length; ++i) {
+			buildings[i] = buildingSheet.subBitmap(VALID_BUILDINGS[i] * 128, 0, 128, buildingSheet.h);
 		}
 
 		wagon[0] = window.resources.bitmaps["trein1"];
