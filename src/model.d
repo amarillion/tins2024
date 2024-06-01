@@ -1,9 +1,13 @@
 module model;
 
-import isomap;
 import std.random;
-import helix.util.vec;
+import std.json;
 import std.conv;
+
+import helix.util.vec;
+
+import isomap;
+import readMap;
 
 class City
 {
@@ -122,16 +126,17 @@ public:
 				if (ny < 0) ny = 0;
 				if (ny >= mapTT.size.y) ny = mapTT.size.y - 1;
 
-				mapTT[Point(nx, ny)].building_tile = uniform(0, 6);
+				mapTT[Point(nx, ny)].building_tile = uniform(1, 7);
 				p -= 3000;
 
 			}
-			mapTT[Point(x, y)].building_tile = 6; // church in the center
+			mapTT[Point(x, y)].building_tile = 0; // church in the center
 		}
 	}
 
-	void initGame() {
-		mapTT = new MyGrid(64, 64);
+	void initGame(JSONValue node) {
+		// mapTT = new MyGrid(64, 64);
+		mapTT = readMapFromTiledJSON(node);
 		generateMap();
 	}
 

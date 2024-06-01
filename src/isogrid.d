@@ -18,15 +18,15 @@ import helix.allegro.bitmap;
 import helix.color;
 import helix.component : GraphicsContext;
 
-const int TILEX = 32;
-const int TILEY = 32;
-const int TILEZ = 16;
+const int TILEX = 64;
+const int TILEY = 64;
+const int TILEZ = 32;
 
 import isomap : Tile;
 
-const int DEFAULT_TILEX = 32;
-const int DEFAULT_TILEY = 32;
-const int DEFAULT_TILEZ = 16;
+const int DEFAULT_TILEX = 64;
+const int DEFAULT_TILEY = 64;
+const int DEFAULT_TILEZ = 32;
 
 // default tile size in texture space
 const int DEFAULT_TILEU = 16;
@@ -432,9 +432,7 @@ public:
 		// ALLEGRO_COLOR baseColor = al_map_rgb (192, 255, 192);
 		ALLEGRO_COLOR baseColor = al_map_rgb (255, 255, 255);
 
-		// TODO hard coded tile indices for use in krampushack for now
-		// int tilei = (c.z + c.dzbot > 2 || c.z > 2 || c.z + c.dzright > 2 || c.z + c.dzleft > 2) ? 2 : 1;
-		int tilei = 0; // TODO <-- this is a hack for now
+		int tilei = c.terrain_tile;
 
 		int ubase = tileu * tilei;
 		int vbase = 0;

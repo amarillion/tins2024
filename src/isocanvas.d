@@ -82,9 +82,10 @@ class IsoCanvas : Component
 		TL[ 6] = window.resources.bitmaps["TL2G"];
 		TL[ 7] = window.resources.bitmaps["TL2R"];
 
+		Bitmap buildingSheet = window.resources.bitmaps["building"];
 		for (int i = 0; i < 9; ++i)
 		{
-			buildings[i] = window.resources.bitmaps[BUILDING_NAMES[i]];
+			buildings[i] = buildingSheet.subBitmap(i * 128, 0, 128, buildingSheet.h);
 		}
 
 		wagon[0] = window.resources.bitmaps["trein1"];

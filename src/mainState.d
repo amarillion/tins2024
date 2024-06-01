@@ -37,7 +37,9 @@ class MainState : DialogBuilder {
 		buildDialog(window.resources.jsons["title-layout"]);
 		
 		auto model = new Model();
-		model.initGame();
+
+		auto mapData = window.resources.jsons["themap"];
+		model.initGame(mapData);
 
 		auto canvas = getElementById("canvas");
 

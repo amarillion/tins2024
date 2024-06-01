@@ -113,11 +113,22 @@ struct Tile {
 		return (dzbot == 0 && dzleft == 0 && dzright == 0);
 	}
 
+	// TODO: use composition for generic map stuff above 
+
 	/***********************
 	 * spefic to this game
 	 ***********************/
-	int building_tile = 0;
-
+	
+	int terrain_tile = -1;
+	int track_tile;
+	//~ int semaphore_tile;
+	int building_tile = -1;
+	
+	bool hasTrack;
+	int semaphore_state;
+	int idStation; // -1 for none
+	int idTrain; // -1 for none
+	
 }
 
 alias MyGrid = Grid!(2, Tile);
