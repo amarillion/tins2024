@@ -362,15 +362,15 @@ public:
 		canvasFromIso_f(ix, y2, iz, drx[5], dry[5]);
 		canvasFromIso_f(x2, y2, iz, drx[6], dry[6]);
 
-		al_draw_line (gc.offset.x + drx[0], gc.offset.y + dry[0], gc.offset.x + drx[1], gc.offset.y + dry[1], color, 1.0);
-		al_draw_line (gc.offset.x + drx[0], gc.offset.y + dry[0], gc.offset.x + drx[2], gc.offset.y + dry[2], color, 1.0);
-		al_draw_line (gc.offset.x + drx[3], gc.offset.y + dry[3], gc.offset.x + drx[1], gc.offset.y + dry[1], color, 1.0);
-		al_draw_line (gc.offset.x + drx[3], gc.offset.y + dry[3], gc.offset.x + drx[2], gc.offset.y + dry[2], color, 1.0);
-		al_draw_line (gc.offset.x + drx[3], gc.offset.y + dry[3], gc.offset.x + drx[6], gc.offset.y + dry[6], color, 1.0);
-		al_draw_line (gc.offset.x + drx[1], gc.offset.y + dry[1], gc.offset.x + drx[4], gc.offset.y + dry[4], color, 1.0);
-		al_draw_line (gc.offset.x + drx[2], gc.offset.y + dry[2], gc.offset.x + drx[5], gc.offset.y + dry[5], color, 1.0);
-		al_draw_line (gc.offset.x + drx[5], gc.offset.y + dry[5], gc.offset.x + drx[6], gc.offset.y + dry[6], color, 1.0);
-		al_draw_line (gc.offset.x + drx[4], gc.offset.y + dry[4], gc.offset.x + drx[6], gc.offset.y + dry[6], color, 1.0);
+		al_draw_line (-gc.offset.x + drx[0], -gc.offset.y + dry[0], -gc.offset.x + drx[1], -gc.offset.y + dry[1], color, 1.0);
+		al_draw_line (-gc.offset.x + drx[0], -gc.offset.y + dry[0], -gc.offset.x + drx[2], -gc.offset.y + dry[2], color, 1.0);
+		al_draw_line (-gc.offset.x + drx[3], -gc.offset.y + dry[3], -gc.offset.x + drx[1], -gc.offset.y + dry[1], color, 1.0);
+		al_draw_line (-gc.offset.x + drx[3], -gc.offset.y + dry[3], -gc.offset.x + drx[2], -gc.offset.y + dry[2], color, 1.0);
+		al_draw_line (-gc.offset.x + drx[3], -gc.offset.y + dry[3], -gc.offset.x + drx[6], -gc.offset.y + dry[6], color, 1.0);
+		al_draw_line (-gc.offset.x + drx[1], -gc.offset.y + dry[1], -gc.offset.x + drx[4], -gc.offset.y + dry[4], color, 1.0);
+		al_draw_line (-gc.offset.x + drx[2], -gc.offset.y + dry[2], -gc.offset.x + drx[5], -gc.offset.y + dry[5], color, 1.0);
+		al_draw_line (-gc.offset.x + drx[5], -gc.offset.y + dry[5], -gc.offset.x + drx[6], -gc.offset.y + dry[6], color, 1.0);
+		al_draw_line (-gc.offset.x + drx[4], -gc.offset.y + dry[4], -gc.offset.x + drx[6], -gc.offset.y + dry[6], color, 1.0);
 	}
 
 	/*
@@ -385,8 +385,8 @@ public:
 		int prev = to!int(coords.length) - 1;
 		for (int i = 0; i < coords.length; ++i) {
 			al_draw_line (
-					gc.offset.x + coords[prev].x, gc.offset.y + coords[prev].y,
-					gc.offset.x + coords[i].x,    gc.offset.y + coords[i].y,
+					-gc.offset.x + coords[prev].x, -gc.offset.y + coords[prev].y,
+					-gc.offset.x + coords[i].x,    -gc.offset.y + coords[i].y,
 					color, 1.0);
 			prev = i;
 		}
@@ -541,8 +541,8 @@ public:
 
 		for (int i = 0; i < 6; ++i)
 		{
-			coord[i].x += gc.offset.x;
-			coord[i].y += gc.offset.y;
+			coord[i].x -= gc.offset.x;
+			coord[i].y -= gc.offset.y;
 		}
 
 
@@ -745,8 +745,8 @@ public:
 
 		for (int i = 0; i < 6; ++i)
 		{
-			coord[i].x += gc.offset.x;
-			coord[i].y += gc.offset.y;
+			coord[i].x -= gc.offset.x;
+			coord[i].y -= gc.offset.y;
 		}
 
 
@@ -847,8 +847,8 @@ public:
 		for (int i = 0; i < num; ++i)
 		{
 			canvasFromIso_f (x[i], y[i], z[i], coord[i].x, coord[i].y);
-			coord[i].x += gc.offset.x;
-			coord[i].y += gc.offset.y;
+			coord[i].x -= gc.offset.x;
+			coord[i].y -= gc.offset.y;
 			coord[i].color = color;
 		}
 

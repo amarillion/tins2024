@@ -41,7 +41,9 @@ void drawMap(const GraphicsContext gc, IsoGrid iso, MyGrid map)
 }
 
 class IsoCanvas : Component
-{		
+{
+	override Point getPreferredSize() const { return Point (iso.getw(), iso.geth()); }
+
 	int cursorx = 0;
 	int cursory = 0;
 	MyGrid map;
@@ -104,8 +106,8 @@ class IsoCanvas : Component
 		{
 			int rx, ry;
 			iso.canvasFromMap(cursorx, cursory, &rx, &ry);
-			int x = rx + gc.offset.x;
-			int y = ry + gc.offset.y;
+			int x = rx - gc.offset.x;
+			int y = ry - gc.offset.y;
 
 			al_draw_line (x, y,           x + 32, y + 15, Color.YELLOW, 1.0);
 			al_draw_line (x + 32, y + 15, x, y + 31,      Color.YELLOW, 1.0);
@@ -127,7 +129,9 @@ class IsoCanvas : Component
 				// TODO: fill in z coord
 				float rx, ry;
 				iso.canvasFromIso_f(ix * TILEX, iy * TILEY, 1, rx, ry); // TODO: why 1?
-				
+				rx -= gc.offset.x;
+				ry -= gc.offset.y;
+
 				int idx = map[Point(ix, iy)].building_tile;
 				if (idx > 0)
 				{
