@@ -20,8 +20,7 @@ import helix.util.coordrange;
  * dzleft, dzright and dzbot are the z-delta, in tile units, of the left,
  * right and bottom corners
  */
-struct Tile
-{
+struct Tile {
 	int z = 0;
 	short dzleft = 0;
 	short dzright = 0;
@@ -117,7 +116,7 @@ struct Tile
 	/***********************
 	 * spefic to this game
 	 ***********************/
-	int building = 0;
+	int building_tile = 0;
 
 }
 
@@ -135,9 +134,9 @@ MyGrid initMap(int dim) {
 	}
 	
 	// raiseTile(map, 5, 5);
-	map[Point(5, 5)].building = 1;
-	map[Point(8, 3)].building = 2;
-	map[Point(9, 9)].building = 3;
+	map[Point(5, 5)].building_tile = 1;
+	map[Point(8, 3)].building_tile = 2;
+	map[Point(9, 9)].building_tile = 3;
 
 	return map;
 }

@@ -14,6 +14,7 @@ import dialog;
 import dialogBuilder;
 import isocanvas;
 import isomap;
+import model;
 
 class MainState : DialogBuilder {
 
@@ -45,10 +46,11 @@ class MainState : DialogBuilder {
 		/* MENU */
 		buildDialog(window.resources.jsons["title-layout"]);
 		
-		auto map = initMap(10);
+		auto model = new Model();
+		model.initGame();
 
 		auto canvas = getElementById("canvas");
-		canvas.addChild(new MapScreen(window, map));
+		canvas.addChild(new MapScreen(window, model.mapTT));
 
 		getElementById("btn_credits").onAction.add((e) { 
 			RichTextBuilder builder = new RichTextBuilder()

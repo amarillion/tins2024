@@ -432,8 +432,9 @@ public:
 		// ALLEGRO_COLOR baseColor = al_map_rgb (192, 255, 192);
 		ALLEGRO_COLOR baseColor = al_map_rgb (255, 255, 255);
 
-		// TODO hard coded tile indices for use in krampushack for now...
-		int tilei = (c.z + c.dzbot > 2 || c.z > 2 || c.z + c.dzright > 2 || c.z + c.dzleft > 2) ? 2 : 1;
+		// TODO hard coded tile indices for use in krampushack for now
+		// int tilei = (c.z + c.dzbot > 2 || c.z > 2 || c.z + c.dzright > 2 || c.z + c.dzleft > 2) ? 2 : 1;
+		int tilei = 0; // TODO <-- this is a hack for now
 
 		int ubase = tileu * tilei;
 		int vbase = 0;

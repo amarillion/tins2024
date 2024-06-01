@@ -14,9 +14,15 @@ import helix.component;
 import helix.util.vec;
 import helix.util.coordrange;
 import helix.color;
+import helix.allegro.bitmap;
 
 import isogrid;
 import isomap;
+
+const string[9] BUILDING_NAMES = [
+	"casas1", "casas2", "casas3", "casas4",
+	"casas5", "casas6", "church", "tree1", "tree2"
+];
 
 void drawMap(const GraphicsContext gc, IsoGrid iso, MyGrid map)
 {
@@ -24,7 +30,10 @@ void drawMap(const GraphicsContext gc, IsoGrid iso, MyGrid map)
 		for (int my = 0; my < map.size.y; ++my)
 		{
 			auto c = map[Point(mx, my)];
-			iso.drawMapSurfaceWire(gc, mx, my, 0, 1, 1, Color.BLUE);
+			
+			// enable for debugging:
+			// iso.drawMapSurfaceWire(gc, mx, my, 0, 1, 1, Color.BLUE);
+			
 			iso.drawSurface(gc, mx, my, c); //TODO <-- not working?
 			iso.drawLeftWall(gc, mx, my, c);
 			iso.drawRightWall(gc, mx, my, c);
@@ -43,10 +52,48 @@ class IsoCanvas : Component
 		super(window, "isocanvas");
 		map = _map;
 		iso = new IsoGrid(map.size.x, map.size.y, 20, TILEX, TILEZ);
-
-		iso.setTexture(window.resources.bitmaps["tileset"], 32, 32);
+		initResources();
 	}
+
+	Bitmap[18] tracks;
+	Bitmap[8] TL;
+	Bitmap[9] buildings;
+	Bitmap[6] wagon;
 	
+	final void initResources() {
+		iso.setTexture(window.resources.bitmaps["tileset"], 32, 32);
+
+		// resources already inited at this point.
+		// obtain arrays of tiles
+
+		//NB tracks 0-15 are obsolete
+
+		tracks[16] = window.resources.bitmaps["station1"];
+		tracks[17] = window.resources.bitmaps["station2"];
+
+		TL[ 0] = window.resources.bitmaps["TL3G"];
+		TL[ 1] = window.resources.bitmaps["TL3R"];
+		TL[ 2] = window.resources.bitmaps["TL1G"];
+		TL[ 3] = window.resources.bitmaps["TL1R"];
+		TL[ 4] = window.resources.bitmaps["TL4G"];
+		TL[ 5] = window.resources.bitmaps["TL4R"];
+		TL[ 6] = window.resources.bitmaps["TL2G"];
+		TL[ 7] = window.resources.bitmaps["TL2R"];
+
+		for (int i = 0; i < 9; ++i)
+		{
+			buildings[i] = window.resources.bitmaps[BUILDING_NAMES[i]];
+		}
+
+		wagon[0] = window.resources.bitmaps["trein1"];
+		wagon[1] = window.resources.bitmaps["trein2"];
+		wagon[2] = window.resources.bitmaps["trein3"];
+		wagon[3] = window.resources.bitmaps["trein4"];
+		wagon[4] = window.resources.bitmaps["trein5"];
+		wagon[5] = window.resources.bitmaps["trein6"];
+
+	}
+
 	override void update() {}
 	
 	void drawCursor (const GraphicsContext gc)
@@ -74,11 +121,6 @@ class IsoCanvas : Component
 		drawMap(gc, iso, map);
 		drawCursor(gc);
 		
-		ALLEGRO_BITMAP *[4] bmp;
-		bmp[1] = window.resources.bitmaps["church"].ptr;
-		bmp[2] = window.resources.bitmaps["casas1"].ptr;
-		bmp[3] = window.resources.bitmaps["station1"].ptr;
-		 
 		for (int ix = 0; ix < map.size.x; ++ix)
 			for (int iy = 0; iy < map.size.y; ++iy)
 			{
@@ -86,12 +128,12 @@ class IsoCanvas : Component
 				float rx, ry;
 				iso.canvasFromIso_f(ix * TILEX, iy * TILEY, 1, rx, ry); // TODO: why 1?
 				
-				int idx = map[Point(ix, iy)].building;
+				int idx = map[Point(ix, iy)].building_tile;
 				if (idx > 0)
 				{
-					int ww = al_get_bitmap_width(bmp[idx]);
-					int hh = al_get_bitmap_height(bmp[idx]);
-					al_draw_bitmap(bmp[idx], rx - (ww / 2), ry - hh, 0);
+					int ww = buildings[idx].w;
+					int hh = buildings[idx].h;
+					al_draw_bitmap(buildings[idx].ptr, rx - (ww / 2), ry - hh, 0);
 				}
 			}
 	}
