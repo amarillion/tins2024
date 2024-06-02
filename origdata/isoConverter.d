@@ -1,4 +1,6 @@
-#!/usr/bin/env -S rdmd -Idtwist/src -I~/prg/alleg/DAllegro5/ -L-L/home/martijn/prg/alleg/DAllegro5
+#!/usr/bin/env -S rdmd -I../dtwist/src -I~/prg/alleg/DAllegro5/ -L-L/home/martijn/prg/alleg/DAllegro5
+
+import std.string;
 
 import allegro5.allegro;
 import allegro5.allegro_image;
@@ -67,8 +69,9 @@ Bitmap convertStack(Bitmap images, int num) {
 }
 
 int main(string[] args) {
-	assert(args.length == 2, "Usage: ./isoConverter.d <infile>");
+	assert(args.length == 3, "Usage: ./isoConverter.d <infile> <outfile>");
 	string infile = args[1];
+	string outfile = args[2];
 
 	al_run_allegro(
 	{
@@ -78,7 +81,7 @@ int main(string[] args) {
 		Bitmap spriteSheet = readSpriteSheet(infile);
 
 		Bitmap result = convertStack(spriteSheet, 16);
-		al_save_bitmap("output.png", result.ptr);
+		al_save_bitmap(toStringz(outfile), result.ptr);
 		return 0;
 	});
 	return 0;
