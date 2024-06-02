@@ -8,6 +8,7 @@ import map;
 struct Wagon {
 	float lx;
 	float ly;
+	float lz;
 	float angle;
 	int spriteIdx;
 }
@@ -43,7 +44,7 @@ public:
 		float dAngle = SUBLOC_INFO[eInfo.to].degrees - SUBLOC_INFO[eInfo.from].degrees;
 		if (dAngle > 180) dAngle -= 360;
 		if (dAngle < -180) dAngle += 360;
-		
+
 		float result = SUBLOC_INFO[eInfo.from].degrees + (dAngle * frac);
 		if (result < 0) result += 360;
 		return result;
@@ -57,8 +58,10 @@ public:
 		return node.pos.y + EDGE_INFO[dir].calc_y(steps);
 	}
 
-	float getLz() {
-		return 0.0f; //TODO
+	static float getLz(Model model, Node node, Edge dir, float steps) {
+		float fromz = model.getSubNodeZ(node.pos, EDGE_INFO[dir].from);
+		float toz = model.getSubNodeZ(node.pos + Point(EDGE_INFO[dir].dx, EDGE_INFO[dir].dy), EDGE_INFO[dir].to);
+		return fromz + (toz - fromz) * (steps / EDGE_INFO[dir].length);
 	}
 
 	void recalcWagons() {
@@ -67,6 +70,7 @@ public:
 
 		float wagLx = getLx();
 		float wagLy = getLy();
+
 		Node wagLoc = node;
 		Edge wagDir = dir;
 		float wagSteps = steps;
@@ -79,6 +83,7 @@ public:
 		foreach (ref wagon; wagons) {
 			wagon.lx = wagLx;
 			wagon.ly = wagLy;
+			wagon.lz = getLz(model, wagLoc, wagDir, wagSteps);
 			wagon.angle = getAngle(wagDir, wagSteps);
 
 			if (trailIt < trail.length) {

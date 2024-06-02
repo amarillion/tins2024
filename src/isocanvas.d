@@ -121,7 +121,7 @@ class IsoCanvas : Component
 			foreach (w; train.wagons) {
 				int rotation = to!int((w.angle + 45) * 16.0 / 360.0) % 16;
 				Bitmap s = first ? locomotive[rotation] : wagon[rotation];
-				iso.canvasFromIso_f(TILEX * w.lx, TILEY * w.ly, TILEZ * 0.0f, rx, ry);
+				iso.canvasFromIso_f(TILEX * w.lx, TILEY * w.ly, TILEZ * w.lz, rx, ry);
 				al_draw_bitmap (s.ptr,
 					rx - gc.offset.x - s.w / 2,
 					ry - gc.offset.y - s.h / 2,

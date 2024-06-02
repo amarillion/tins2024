@@ -102,4 +102,19 @@ public:
 			t.doMove();
 		}
 	}
+
+	int getSubNodeZ(Point p, int subnode) {
+		switch(subnode) {
+			case SubLoc.NW: return mapTT[p].cell.z;
+			case SubLoc.N: return mapTT[p].cell.z; // NOTE: it's actually halfway between NW and NE, but if the surface is slanted we're in trouble anyway.
+			case SubLoc.NE: return mapTT[p].cell.z + mapTT[p].cell.dzright;
+			case SubLoc.E: return mapTT[p].cell.z + mapTT[p].cell.dzright;
+			case SubLoc.SE: return mapTT[p].cell.z + mapTT[p].cell.dzbot;
+			case SubLoc.S: return mapTT[p].cell.z + mapTT[p].cell.dzbot;
+			case SubLoc.SW: return mapTT[p].cell.z + mapTT[p].cell.dzleft;
+			case SubLoc.W: return mapTT[p].cell.z + mapTT[p].cell.dzleft;
+			case SubLoc.CENTER: return mapTT[p].cell.z;
+			default: return 0;
+		}
+	}
 }

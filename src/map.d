@@ -77,9 +77,6 @@ enum Edge {
 	// straight:
 	N, E, S, W,
 
-	// up and down:
-	NU, EU, SU, WU, ND, ED, SD, WD,
-
 	// small turn:
 	NE_small, NW_small, SE_small, SW_small, ES_small, WS_small, EN_small, WN_small,
 
@@ -101,16 +98,6 @@ enum EdgeInfo[Edge] EDGE_INFO = [
 	Edge.S: EdgeInfo(Edge.S, SubLoc.N, SubLoc.N, 0,  1, 0, 1.0f),
 	Edge.W: EdgeInfo(Edge.W, SubLoc.E, SubLoc.E, -1, 0, 0, 1.0f),
 
-	Edge.NU: EdgeInfo(Edge.NU, SubLoc.S, SubLoc.S, 0, -1, 1, 1.0f),
-	Edge.EU: EdgeInfo(Edge.EU, SubLoc.W, SubLoc.W, 1,  0, 1, 1.0f),
-	Edge.SU: EdgeInfo(Edge.SU, SubLoc.N, SubLoc.N, 0,  1, 1, 1.0f),
-	Edge.WU: EdgeInfo(Edge.WU, SubLoc.E, SubLoc.E, -1, 0, 1, 1.0f),
-
-	Edge.ND: EdgeInfo(Edge.ND, SubLoc.S, SubLoc.S,  0, -1, -1, 1.0f),
-	Edge.ED: EdgeInfo(Edge.ED, SubLoc.W, SubLoc.W,  1,  0, -1, 1.0f),
-	Edge.SD: EdgeInfo(Edge.SD, SubLoc.N, SubLoc.N,  0,  1, -1, 1.0f),
-	Edge.WD: EdgeInfo(Edge.WD, SubLoc.E, SubLoc.E, -1,  0, -1, 1.0f),
-	
 	// quarter circle with radius 0.5
 	// going from N to E
 	Edge.NE_small: EdgeInfo(Edge.NE_small, SubLoc.S, SubLoc.W,  1,  0, 0, 0.25 * PI),
