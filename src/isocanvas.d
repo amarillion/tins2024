@@ -21,6 +21,8 @@ import isogrid;
 import map;
 import model;
 
+enum NUM_BUILDINGS = 21;
+
 void drawMap(const GraphicsContext gc, IsoGrid iso, MyGrid map)
 {
 	for (int mx = 0; mx < map.size.x; ++mx)
@@ -64,7 +66,7 @@ class IsoCanvas : Component
 
 	Bitmap[18] tracks;
 	Bitmap[8] TL;
-	Bitmap[9] buildings;
+	Bitmap[NUM_BUILDINGS] buildings;
 	Bitmap[16] wagon;
 	Bitmap[16] locomotive;
 	
@@ -87,9 +89,8 @@ class IsoCanvas : Component
 		TL[ 7] = window.resources.bitmaps["TL2R"];
 
 		Bitmap buildingSheet = window.resources.bitmaps["building"];
-		int[] VALID_BUILDINGS = [0,12,14,22,13,15,21,7,8];
-		for (int i = 0; i < VALID_BUILDINGS.length; ++i) {
-			buildings[i] = buildingSheet.subBitmap(VALID_BUILDINGS[i] * 128, 0, 128, buildingSheet.h);
+		for (int i = 0; i < NUM_BUILDINGS; ++i) {
+			buildings[i] = buildingSheet.subBitmap(i * 128, 0, 128, buildingSheet.h);
 		}
 
 		Bitmap wagonSheet = window.resources.bitmaps["wagon-iso"];
@@ -151,9 +152,14 @@ class IsoCanvas : Component
 			int idx = map[p].building_tile;
 			if (idx > 0)
 			{
+				int flags = 0;
+				if (idx > 512) {
+					idx -= 512;
+					flags = ALLEGRO_FLIP_HORIZONTAL;
+				}
 				int ww = buildings[idx].w;
 				int hh = buildings[idx].h;
-				al_draw_bitmap(buildings[idx].ptr, rx - (ww / 2), ry - hh, 0);
+				al_draw_bitmap(buildings[idx].ptr, rx - (ww / 2), ry - hh, flags);
 			}
 		}
 	}

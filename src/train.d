@@ -1,5 +1,6 @@
 module train;
 
+import std.random;
 import helix.util.vec;
 
 import model;
@@ -116,7 +117,7 @@ public:
 
 		// now we pick the first option available.
 		// TODO: random choice?
-		return options.keys[0];
+		return choice(options.keys);
 	}
 
 	void doMove() {

@@ -7,7 +7,7 @@ SRC=.
 .PHONY: default
 default: all ;
 
-SPRITES=building locomotive wagon
+SPRITES=building locomotive wagon FoleNRaulTrainBoss
 SHEET_FILES=$(patsubst %,$(DEST)/%.png,$(SPRITES))
 
 $(SHEET_FILES): $(DEST)/%.png: $(SRC)/%.aseprite
@@ -18,9 +18,13 @@ $(SHEET_FILES): $(DEST)/%.png: $(SRC)/%.aseprite
 
 ../data/locomotive-iso.png: ../data/locomotive.png
 	./isoConverter.d $< $@
+	# Downscale 50% with imagemagick
+	convert $@ -resize 50% $@
 	
 ../data/wagon-iso.png: ../data/wagon.png
 	./isoConverter.d $< $@
+	# Downscale 50% with imagemagick
+	convert $@ -resize 50% $@
 
 .PHONY: all
 all: $(SHEET_FILES) ../data/tileset.png ../data/locomotive-iso.png ../data/wagon-iso.png

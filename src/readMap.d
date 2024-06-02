@@ -43,6 +43,34 @@ enum TileDeltas[] TILE_DELTAZ = [
 	TileDeltas( 0, 1, 0, 1 ),
 ];
 
+
+enum int[int] TILE_IDX_TO_BUILDING = [
+	241: 9,
+	242: 10,
+	243: 11,
+	244: 12,
+	245: 13,
+	246: 14,
+	247: 15,
+	248: 16,
+	249: 17,
+	250: 18,
+	251: 19,
+	252: 20,
+
+	225: 9 + 512,
+	226: 10 + 512,
+	227: 11 + 512,
+	228: 12 + 512,
+	229: 13 + 512,
+	230: 14 + 512,
+	231: 15 + 512,
+	232: 16 + 512,
+	233: 17 + 512,
+	234: 18 + 512,
+	235: 19 + 512,
+	236: 20 + 512,
+];
 MyGrid readMapFromTiledJSON(JSONValue node) {
 	int width = cast(int)node["width"].integer;
 	int height = cast(int)node["height"].integer;
@@ -114,7 +142,9 @@ MyGrid readMapFromTiledJSON(JSONValue node) {
 		foreach (p; PointRange(result.size)) {
 			const tileIdx = to!int(data[result.toIndex(p)].integer - 1);
 			if (tileIdx >= 0) {
-				result[p].building_tile = tileIdx - 240; // TODO: hardcoded start value for building tiles.
+				if (tileIdx in TILE_IDX_TO_BUILDING) {
+					result[p].building_tile = TILE_IDX_TO_BUILDING[tileIdx];
+				}
 			}
 		}
 	}
