@@ -6,10 +6,10 @@ import helix.util.coordrange;
 import map;
 import model;
 
-enum EdgeType[][int] TILE_INDEX_TO_EDGE = [
+enum Edge[][int] TILE_INDEX_TO_EDGE = [
 	// horizontal tracks
-	48: [EdgeType(SubLoc.E, SubLoc.E, 1,  0), EdgeType(SubLoc.W, SubLoc.W, -1, 0)],
-	49: [EdgeType(SubLoc.N, SubLoc.N, 0, -1), EdgeType(SubLoc.S, SubLoc.S,  0, 1)],
+	48: [Edge.E, Edge.W],
+	49: [Edge.N, Edge.S],
 ];
 
 class TileMapper {
@@ -17,11 +17,11 @@ class TileMapper {
 		foreach (p; PointRange(model.mapTT.size)) {
 			foreach(tileIdx; model.mapTT[p].track_tile) {
 				if (tileIdx in TILE_INDEX_TO_EDGE) {
-					foreach(edgeType; TILE_INDEX_TO_EDGE[tileIdx]) {
-
-						auto src = model.getOrCreateNode(p, edgeType.from);
-						auto dest = model.getOrCreateNode(p + Point(edgeType.dx, edgeType.dy), edgeType.to);
-						model.createEdge(src, dest, edgeType);
+					foreach(edge; TILE_INDEX_TO_EDGE[tileIdx]) {
+						auto eInfo = EDGE_INFO[edge];
+						auto src = model.getOrCreateNode(p, eInfo.from);
+						auto dest = model.getOrCreateNode(p + Point(eInfo.dx, eInfo.dy), eInfo.to);
+						model.createEdge(src, dest, edge);
 						// adding node and edges to map...
 					}
 				}

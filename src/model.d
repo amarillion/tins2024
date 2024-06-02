@@ -57,13 +57,20 @@ public:
 			return mapTT[p].nodes[loc];
 		}
 		else {
-			Node n = new Node(p, loc);
+			Node n = Node(p, loc);
 			mapTT[p].nodes[loc] = n;
 			return n;
 		}
 	}
 
-	void createEdge(Node src, Node dest, EdgeType edgeType) {
-		src.links[edgeType] = dest;
+	void createEdge(Node src, Node dest, Edge edge) {
+		mapTT[src.pos].links[edge] = dest;
+	}
+
+	bool canGo(Node src, Edge edge) {
+		if (edge in mapTT[src.pos].links) {
+			return true;
+		}
+		return false;
 	}
 }

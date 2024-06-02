@@ -7,6 +7,8 @@ module map;
 
 import std.conv;
 import std.algorithm;
+import std.math.constants : PI;
+import std.math;
 
 import helix.util.grid;
 import helix.util.vec;
@@ -19,28 +21,133 @@ import isogrid : Cell;
  * For example, SubLoc::N means that you are starting from the center-top of a tile, facing south
  * while moving to the next tile.
  */
-enum SubLoc { N, E, S, W }
+enum SubLoc { CENTER, N, E, S, W, NE, SE, SW, NW }
 
-struct EdgeType {
+struct SubLocInfo {
+	SubLoc loc;
+	float dx;
+	float dy;
+}
+
+enum SubLocInfo[SubLoc] SUBLOC_INFO = [
+	SubLoc.CENTER: SubLocInfo(SubLoc.CENTER, 0.5, 0.5),
+	SubLoc.N: SubLocInfo(SubLoc.N, 0.5, 0.0),
+	SubLoc.E: SubLocInfo(SubLoc.E, 1.0, 0.5),
+	SubLoc.S: SubLocInfo(SubLoc.S, 0.5, 1.0),
+	SubLoc.W: SubLocInfo(SubLoc.W, 0.0, 0.5),
+	SubLoc.NE: SubLocInfo(SubLoc.NE, 1.0, 0.0),
+	SubLoc.SE: SubLocInfo(SubLoc.SE, 1.0, 1.0),
+	SubLoc.SW: SubLocInfo(SubLoc.SW, 0.0, 1.0),
+	SubLoc.NW: SubLocInfo(SubLoc.NW, 0.0, 0.0),
+];
+
+struct EdgeInfo {
+	Edge type;
+
 	SubLoc from;
 	SubLoc to;
 	int dx;
 	int dy;
+	int dz;
+
+	float length = 1.0; // note: flat distance, excluding height difference
+
+	float calc_x(float dist) const {
+		if (length > 0.78 && length < 0.79)
+			return calc_pivot_x(type, dist);
+		else return calc_linear_x(type, dist);
+	}
+
+	float calc_y(float dist) const {
+		if (length > 0.78 && length < 0.79)
+			return calc_pivot_y(type, dist);
+		else return calc_linear_y(type, dist);
+	}
 }
 
-class Node {
+enum Edge { 
+	UNDEFINED,
+
+	// straight:
+	N, E, S, W,
+
+	// up and down:
+	NU, EU, SU, WU, ND, ED, SD, WD,
+
+	// small turn:
+	NE_small, NW_small, SE_small, SW_small, ES_small, WS_small, EN_small, WN_small,
+
+	// diagonal:
+	NE, SE, SW, NW,
+
+	// big turn start:
+	NE_big_start, NW_big_start, SE_big_start, SW_big_start, ES_big_start, WS_big_start, EN_big_start, WN_big_start,
+
+	// big turn end:
+	NE_big_end, NW_big_end, SE_big_end, SW_big_end, ES_big_end, WS_big_end, EN_big_end, WN_big_end,
+}
+
+enum EdgeInfo[Edge] EDGE_INFO = [
+	Edge.UNDEFINED: EdgeInfo(Edge.N, SubLoc.N, SubLoc.N, 0, 0, 0, 0.0f),
+	Edge.N: EdgeInfo(Edge.N, SubLoc.N, SubLoc.N, 0, -1, 0, 1.0f),
+	Edge.E: EdgeInfo(Edge.E, SubLoc.E, SubLoc.E, 1,  0, 0, 1.0f),
+	Edge.S: EdgeInfo(Edge.S, SubLoc.S, SubLoc.S, 0,  1, 0, 1.0f),
+	Edge.W: EdgeInfo(Edge.W, SubLoc.W, SubLoc.W, -1, 0, 0, 1.0f),
+
+	Edge.NU: EdgeInfo(Edge.NU, SubLoc.N, SubLoc.N, 0, -1, 1, 1.0f),
+	Edge.EU: EdgeInfo(Edge.EU, SubLoc.E, SubLoc.E, 1,  0, 1, 1.0f),
+	Edge.SU: EdgeInfo(Edge.SU, SubLoc.S, SubLoc.S, 0,  1, 1, 1.0f),
+	Edge.WU: EdgeInfo(Edge.WU, SubLoc.W, SubLoc.W, -1, 0, 1, 1.0f),
+
+	Edge.ND: EdgeInfo(Edge.ND, SubLoc.N, SubLoc.N, 0, -1, -1, 1.0f),
+	Edge.ED: EdgeInfo(Edge.ED, SubLoc.E, SubLoc.E, 1,  0, -1, 1.0f),
+	Edge.SD: EdgeInfo(Edge.SD, SubLoc.S, SubLoc.S, 0,  1, -1, 1.0f),
+	Edge.WD: EdgeInfo(Edge.WD, SubLoc.W, SubLoc.W, -1, 0, -1, 1.0f),
+	
+	// quarter circle with radius 0.5
+	Edge.NE_small: EdgeInfo(Edge.NE_small, SubLoc.N, SubLoc.E,  1, -1, 0, 0.25 * PI),
+	Edge.NW_small: EdgeInfo(Edge.NW_small, SubLoc.N, SubLoc.W, -1, -1, 0, 0.25 * PI),
+	Edge.SE_small: EdgeInfo(Edge.SE_small, SubLoc.S, SubLoc.E,  1,  1, 0, 0.25 * PI),
+	Edge.SW_small: EdgeInfo(Edge.SW_small, SubLoc.S, SubLoc.W, -1,  1, 0, 0.25 * PI),
+];
+
+// Must be struct, because we want to create instances and do equality checks
+struct Node {
 	Point pos;
-	SubLoc subloc;
-	Node[EdgeType] links;
+	SubLoc subLoc;
+
 	this(Point p, SubLoc loc) {
 		pos = p;
-		subloc = loc;
+		subLoc = loc;
+	}
+
+	/**
+	 * In place modification // TODO: make const
+	 */
+	Node followReverse(Edge e) const {
+		auto eInfo = EDGE_INFO[e]; 
+		assert (eInfo.to == subLoc, "followReverse(...) has wrong toSubLoc");
+		return Node(
+			pos - Point(eInfo.dx, eInfo.dy),
+			eInfo.from
+		);
+	}
+
+	Node following(Edge e) const {
+		auto eInfo = EDGE_INFO[e]; 
+		assert (eInfo.from == subLoc, "follow(...) has wrong fromSubLoc");
+		return Node(
+			pos + Point(eInfo.dx, eInfo.dy),
+			eInfo.to
+		);
 	}
 }
 
 struct Tile {
 	Cell cell;
+	
 	Node[SubLoc] nodes;
+	Node[Edge] links;
 
 	/***********************
 	 * spefic to this game
@@ -98,3 +205,55 @@ void raiseTile(MyGrid map, int x, int y) {
 	raiseCorner(map, x, y + 1);
 }
 
+float calc_linear_x(Edge e, float dist) {
+	auto eInfo = EDGE_INFO[e];
+	if (eInfo.length == 0) return SUBLOC_INFO[eInfo.from].dx;
+	float frac = dist / eInfo.length;
+	return
+		SUBLOC_INFO[eInfo.from].dx * (1.0f - frac) +
+		(eInfo.dx + SUBLOC_INFO[eInfo.to].dx) * frac;
+}
+
+float calc_linear_y(Edge e, float dist) {
+	auto eInfo = EDGE_INFO[e];
+	if (eInfo.length == 0) return SUBLOC_INFO[eInfo.from].dy;
+	float frac = dist / eInfo.length;
+	return
+		SUBLOC_INFO[eInfo.from].dy * (1.0f - frac) +
+		(eInfo.dy + SUBLOC_INFO[eInfo.to].dy) * frac;
+}
+
+float calc_pivot_x(Edge e, float dist) {
+	auto eInfo = EDGE_INFO[e];
+
+	float fromX = SUBLOC_INFO[eInfo.from].dx;
+	float nextX = eInfo.dx + SUBLOC_INFO[eInfo.to].dx;
+
+	float pivot_x = (fromX == 0.5) ? nextX : fromX;
+
+	float ofst =
+			(fromX == 0.5) ? 0.5 * cos(dist * 2) : 0.5 * sin(dist * 2);
+
+	if (pivot_x == 1.0) {
+		return 1.0 - ofst;
+	}
+	else
+	return ofst;
+}
+
+float calc_pivot_y(Edge e, float dist) {
+	auto eInfo = EDGE_INFO[e];
+
+	float fromY = SUBLOC_INFO[eInfo.from].dy;
+	float nextY = eInfo.dy + SUBLOC_INFO[eInfo.to].dy;
+
+	float pivot_y = (fromY == 0.5) ? nextY : fromY;
+
+	float ofst = (fromY == 0.5) ? 0.5 * cos(dist * 2) : 0.5 * sin(dist * 2);
+
+	if (pivot_y == 1.0) {
+		return 1.0 - ofst;
+	}
+	else
+	return ofst;
+}
