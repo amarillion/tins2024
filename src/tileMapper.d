@@ -13,9 +13,17 @@ enum Edge[][int] TILE_INDEX_TO_EDGE = [
 
 	// tight turns
 	16: [Edge.NE_small, Edge.WS_small],
-	17: [Edge.NW_small, Edge.ES_small],
+	17: [Edge.ES_small, Edge.NW_small],
+	33: [Edge.SW_small, Edge.EN_small],
 	32: [Edge.WN_small, Edge.SE_small],
-	33: [Edge.EN_small, Edge.SW_small],
+
+	// big turns
+	52: [Edge.NE_big_start, Edge.WS_big_end], 37: [Edge.NE_big_end, Edge.WS_big_start],
+	34: [Edge.ES_big_start, Edge.NW_big_end], 51: [Edge.ES_big_end, Edge.NW_big_start],
+	 3: [Edge.SW_big_start, Edge.EN_big_end], 18: [Edge.SW_big_end, Edge.EN_big_start],
+	21: [Edge.WN_big_start, Edge.SE_big_end],  4: [Edge.WN_big_end, Edge.SE_big_start],
+
+	// diagonals
 ];
 
 class TileMapper {

@@ -36,6 +36,7 @@ enum SubLocInfo[SubLoc] SUBLOC_INFO = [
 	SubLoc.E: SubLocInfo(SubLoc.E, 1.0, 0.5, 270),
 	SubLoc.S: SubLocInfo(SubLoc.S, 0.5, 1.0, 0),
 	SubLoc.W: SubLocInfo(SubLoc.W, 0.0, 0.5, 90),
+	
 	SubLoc.NE: SubLocInfo(SubLoc.NE, 1.0, 0.0, 225),
 	SubLoc.SE: SubLocInfo(SubLoc.SE, 1.0, 1.0, 315),
 	SubLoc.SW: SubLocInfo(SubLoc.SW, 0.0, 1.0, 45),
@@ -117,6 +118,32 @@ enum EdgeInfo[Edge] EDGE_INFO = [
 	Edge.ES_small: EdgeInfo(Edge.ES_small, SubLoc.W, SubLoc.N,  0,  1, 0, 0.25 * PI),
 	Edge.WN_small: EdgeInfo(Edge.WN_small, SubLoc.E, SubLoc.S,  0, -1, 0, 0.25 * PI),
 	Edge.WS_small: EdgeInfo(Edge.WS_small, SubLoc.E, SubLoc.N,  0,  1, 0, 0.25 * PI),
+
+	// eighth circle with radius 1.0
+	Edge.NE_big_start: EdgeInfo(Edge.NE_big_start, SubLoc.S, SubLoc.SW,  1,  -1, 0, 0.5 * PI),
+	Edge.NE_big_end:   EdgeInfo(Edge.NE_big_end,   SubLoc.SW, SubLoc.W,  1,   0, 0, 0.5 * PI),
+	
+	Edge.NW_big_start: EdgeInfo(Edge.NW_big_start, SubLoc.S, SubLoc.SE, -1,  -1, 0, 0.5 * PI),
+	Edge.NW_big_end:   EdgeInfo(Edge.NW_big_end,   SubLoc.SE, SubLoc.E, -1,   0, 0, 0.5 * PI),
+
+	Edge.SE_big_start: EdgeInfo(Edge.SE_big_start, SubLoc.N, SubLoc.NW,  1,   1, 0, 0.5 * PI),
+	Edge.SE_big_end:   EdgeInfo(Edge.SE_big_end,   SubLoc.NW, SubLoc.W,  1,   0, 0, 0.5 * PI),
+
+	Edge.SW_big_start: EdgeInfo(Edge.SW_big_start, SubLoc.N, SubLoc.NE, -1,   1, 0, 0.5 * PI),
+	Edge.SW_big_end:   EdgeInfo(Edge.SW_big_end,   SubLoc.NE, SubLoc.E, -1,   0, 0, 0.5 * PI),
+
+	Edge.ES_big_start: EdgeInfo(Edge.ES_big_start, SubLoc.W, SubLoc.NW,  1,   1, 0, 0.5 * PI),
+	Edge.ES_big_end:   EdgeInfo(Edge.ES_big_end,   SubLoc.NW, SubLoc.N,  0,   1, 0, 0.5 * PI),
+
+	Edge.WS_big_start: EdgeInfo(Edge.WS_big_start, SubLoc.E, SubLoc.NE, -1,   1, 0, 0.5 * PI),
+	Edge.WS_big_end:   EdgeInfo(Edge.WS_big_end,   SubLoc.NE, SubLoc.N,  0,   1, 0, 0.5 * PI),
+
+	Edge.EN_big_start: EdgeInfo(Edge.EN_big_start, SubLoc.W, SubLoc.SW,  1,  -1, 0, 0.5 * PI),
+	Edge.EN_big_end:   EdgeInfo(Edge.EN_big_end,   SubLoc.SW, SubLoc.S,  0,  -1, 0, 0.5 * PI),
+
+	Edge.WN_big_start: EdgeInfo(Edge.WN_big_start, SubLoc.E, SubLoc.SE, -1,  -1, 0, 0.5 * PI),
+	Edge.WN_big_end:   EdgeInfo(Edge.WN_big_end,   SubLoc.SE, SubLoc.S,  0,  -1, 0, 0.5 * PI),
+
 ];
 
 // Must be struct, because we want to create instances and do equality checks

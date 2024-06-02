@@ -41,9 +41,12 @@ public:
 		float frac = steps / eInfo.length;
 
 		float dAngle = SUBLOC_INFO[eInfo.to].degrees - SUBLOC_INFO[eInfo.from].degrees;
-		if (dAngle < 0) dAngle += 360;
-
-		return SUBLOC_INFO[eInfo.from].degrees + (dAngle * frac);
+		if (dAngle > 180) dAngle -= 360;
+		if (dAngle < -180) dAngle += 360;
+		
+		float result = SUBLOC_INFO[eInfo.from].degrees + (dAngle * frac);
+		if (result < 0) result += 360;
+		return result;
 	}
 
 	float getLx() {
@@ -98,7 +101,9 @@ public:
 
 	/** random movement in case we can't get a suitable path */
 	Edge findRandomValidDir() {
-
+		if (node !in model.links) {
+			return Edge.UNDEFINED; // Will lead to a stop...
+		}
 		auto options = model.links[node];
 		if (options.length == 0) {
 			return Edge.UNDEFINED; // Will lead to a stop...

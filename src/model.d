@@ -89,7 +89,7 @@ public:
 	}
 
 	bool canGo(Node src, Edge edge) {
-		if (edge in links[src]) {
+		if (src in links && edge in links[src]) {
 			return true;
 		}
 		return false;
