@@ -254,7 +254,7 @@ vec!(2, float) calc_pivot2(Edge e, float dist) {
 	float deltaAngle = nextAngle - fromAngle;
 	if (deltaAngle > 180) deltaAngle -= 360;
 	if (deltaAngle < -180) deltaAngle += 360;
-
+	
 	float frac = dist / eInfo.length;
 	float currentAngle = fromAngle + ((deltaAngle) * frac);
 	float currentRadians = (currentAngle) * PI / 180;
@@ -263,13 +263,20 @@ vec!(2, float) calc_pivot2(Edge e, float dist) {
 	float fromX = SUBLOC_INFO[eInfo.from].dx;
 	float fromY = SUBLOC_INFO[eInfo.from].dy;
 
-	return vec!(2, float)(
-		// big circle has radius of 1.5
-		// we swap sin and cos to get at the derivative of the circle
-		fromX + 1.5 * (cos(currentRadians) - cos(startRadians)),
-		fromY + 1.5 * (sin(currentRadians) - sin(startRadians)),
-		// fromX, fromY
-	);
+	if (deltaAngle > 0) {
+		return vec!(2, float)(
+			// solution for clockwise movement provided by copilot...
+			fromX + 1.5 * (cos(startRadians) - cos(currentRadians)),
+			fromY + 1.5 * (sin(startRadians) - sin(currentRadians)),
+		);
+	}
+	else {
+		return vec!(2, float)(
+			// big circle has radius of 1.5
+			fromX + 1.5 * (cos(currentRadians) - cos(startRadians)),
+			fromY + 1.5 * (sin(currentRadians) - sin(startRadians)),
+		);
+	}
 }
 
 float calc_pivot_x(Edge e, float dist) {
