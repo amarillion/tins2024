@@ -24,6 +24,8 @@ enum Edge[][int] TILE_INDEX_TO_EDGE = [
 	21: [Edge.WN_big_start, Edge.SE_big_end],  4: [Edge.WN_big_end, Edge.SE_big_start],
 
 	// diagonals
+	67: [Edge.NW, Edge.SE],
+	70: [Edge.NE, Edge.SW],
 ];
 
 class TileMapper {

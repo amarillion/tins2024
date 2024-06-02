@@ -57,12 +57,16 @@ struct EdgeInfo {
 	float calc_x(float dist) const {
 		if (length > 0.78 && length < 0.79)
 			return calc_pivot_x(type, dist);
+		else if (length > 1.17 && length < 1.18)
+			return calc_pivot2(type, dist).x;
 		else return calc_linear_x(type, dist);
 	}
 
 	float calc_y(float dist) const {
 		if (length > 0.78 && length < 0.79)
 			return calc_pivot_y(type, dist);
+		else if (length > 1.17 && length < 1.18)
+			return calc_pivot2(type, dist).y;
 		else return calc_linear_y(type, dist);
 	}
 }
@@ -120,30 +124,28 @@ enum EdgeInfo[Edge] EDGE_INFO = [
 	Edge.WS_small: EdgeInfo(Edge.WS_small, SubLoc.E, SubLoc.N,  0,  1, 0, 0.25 * PI),
 
 	// eighth circle with radius 1.0
-	Edge.NE_big_start: EdgeInfo(Edge.NE_big_start, SubLoc.S, SubLoc.SW,  1,  -1, 0, 0.5 * PI),
-	Edge.NE_big_end:   EdgeInfo(Edge.NE_big_end,   SubLoc.SW, SubLoc.W,  1,   0, 0, 0.5 * PI),
-	
-	Edge.NW_big_start: EdgeInfo(Edge.NW_big_start, SubLoc.S, SubLoc.SE, -1,  -1, 0, 0.5 * PI),
-	Edge.NW_big_end:   EdgeInfo(Edge.NW_big_end,   SubLoc.SE, SubLoc.E, -1,   0, 0, 0.5 * PI),
+	Edge.NE_big_start: EdgeInfo(Edge.NE_big_start, SubLoc.S, SubLoc.SW,  1,  -1, 0, 0.375 * PI),
+	Edge.NE_big_end:   EdgeInfo(Edge.NE_big_end,   SubLoc.SW, SubLoc.W,  1,   0, 0, 0.375 * PI),
+	Edge.NW_big_start: EdgeInfo(Edge.NW_big_start, SubLoc.S, SubLoc.SE, -1,  -1, 0, 0.375 * PI),
+	Edge.NW_big_end:   EdgeInfo(Edge.NW_big_end,   SubLoc.SE, SubLoc.E, -1,   0, 0, 0.375 * PI),
+	Edge.SE_big_start: EdgeInfo(Edge.SE_big_start, SubLoc.N, SubLoc.NW,  1,   1, 0, 0.375 * PI),
+	Edge.SE_big_end:   EdgeInfo(Edge.SE_big_end,   SubLoc.NW, SubLoc.W,  1,   0, 0, 0.375 * PI),
+	Edge.SW_big_start: EdgeInfo(Edge.SW_big_start, SubLoc.N, SubLoc.NE, -1,   1, 0, 0.375 * PI),
+	Edge.SW_big_end:   EdgeInfo(Edge.SW_big_end,   SubLoc.NE, SubLoc.E, -1,   0, 0, 0.375 * PI),
+	Edge.ES_big_start: EdgeInfo(Edge.ES_big_start, SubLoc.W, SubLoc.NW,  1,   1, 0, 0.375 * PI),
+	Edge.ES_big_end:   EdgeInfo(Edge.ES_big_end,   SubLoc.NW, SubLoc.N,  0,   1, 0, 0.375 * PI),
+	Edge.WS_big_start: EdgeInfo(Edge.WS_big_start, SubLoc.E, SubLoc.NE, -1,   1, 0, 0.375 * PI),
+	Edge.WS_big_end:   EdgeInfo(Edge.WS_big_end,   SubLoc.NE, SubLoc.N,  0,   1, 0, 0.375 * PI),
+	Edge.EN_big_start: EdgeInfo(Edge.EN_big_start, SubLoc.W, SubLoc.SW,  1,  -1, 0, 0.375 * PI),
+	Edge.EN_big_end:   EdgeInfo(Edge.EN_big_end,   SubLoc.SW, SubLoc.S,  0,  -1, 0, 0.375 * PI),
+	Edge.WN_big_start: EdgeInfo(Edge.WN_big_start, SubLoc.E, SubLoc.SE, -1,  -1, 0, 0.375 * PI),
+	Edge.WN_big_end:   EdgeInfo(Edge.WN_big_end,   SubLoc.SE, SubLoc.S,  0,  -1, 0, 0.375 * PI),
 
-	Edge.SE_big_start: EdgeInfo(Edge.SE_big_start, SubLoc.N, SubLoc.NW,  1,   1, 0, 0.5 * PI),
-	Edge.SE_big_end:   EdgeInfo(Edge.SE_big_end,   SubLoc.NW, SubLoc.W,  1,   0, 0, 0.5 * PI),
-
-	Edge.SW_big_start: EdgeInfo(Edge.SW_big_start, SubLoc.N, SubLoc.NE, -1,   1, 0, 0.5 * PI),
-	Edge.SW_big_end:   EdgeInfo(Edge.SW_big_end,   SubLoc.NE, SubLoc.E, -1,   0, 0, 0.5 * PI),
-
-	Edge.ES_big_start: EdgeInfo(Edge.ES_big_start, SubLoc.W, SubLoc.NW,  1,   1, 0, 0.5 * PI),
-	Edge.ES_big_end:   EdgeInfo(Edge.ES_big_end,   SubLoc.NW, SubLoc.N,  0,   1, 0, 0.5 * PI),
-
-	Edge.WS_big_start: EdgeInfo(Edge.WS_big_start, SubLoc.E, SubLoc.NE, -1,   1, 0, 0.5 * PI),
-	Edge.WS_big_end:   EdgeInfo(Edge.WS_big_end,   SubLoc.NE, SubLoc.N,  0,   1, 0, 0.5 * PI),
-
-	Edge.EN_big_start: EdgeInfo(Edge.EN_big_start, SubLoc.W, SubLoc.SW,  1,  -1, 0, 0.5 * PI),
-	Edge.EN_big_end:   EdgeInfo(Edge.EN_big_end,   SubLoc.SW, SubLoc.S,  0,  -1, 0, 0.5 * PI),
-
-	Edge.WN_big_start: EdgeInfo(Edge.WN_big_start, SubLoc.E, SubLoc.SE, -1,  -1, 0, 0.5 * PI),
-	Edge.WN_big_end:   EdgeInfo(Edge.WN_big_end,   SubLoc.SE, SubLoc.S,  0,  -1, 0, 0.5 * PI),
-
+	// diagonals
+	Edge.NW: EdgeInfo(Edge.NW, SubLoc.SE, SubLoc.SE, -1, -1, 0, sqrt(2.0)),
+	Edge.NE: EdgeInfo(Edge.NE, SubLoc.SW, SubLoc.SW,  1, -1, 0, sqrt(2.0)),
+	Edge.SE: EdgeInfo(Edge.SE, SubLoc.NW, SubLoc.NW,  1,  1, 0, sqrt(2.0)),
+	Edge.SW: EdgeInfo(Edge.SW, SubLoc.NE, SubLoc.NE, -1,  1, 0, sqrt(2.0)),
 ];
 
 // Must be struct, because we want to create instances and do equality checks
@@ -254,6 +256,33 @@ float calc_linear_y(Edge e, float dist) {
 	return
 		SUBLOC_INFO[eInfo.from].dy * (1.0f - frac) +
 		(eInfo.dy + SUBLOC_INFO[eInfo.to].dy) * frac;
+}
+
+vec!(2, float) calc_pivot2(Edge e, float dist) {
+	auto eInfo = EDGE_INFO[e];
+
+	float fromAngle = SUBLOC_INFO[eInfo.from].degrees;
+	float nextAngle = SUBLOC_INFO[eInfo.to].degrees;
+
+	float deltaAngle = nextAngle - fromAngle;
+	if (deltaAngle > 180) deltaAngle -= 360;
+	if (deltaAngle < -180) deltaAngle += 360;
+
+	float frac = dist / eInfo.length;
+	float currentAngle = fromAngle + ((deltaAngle) * frac);
+	float currentRadians = (currentAngle) * PI / 180;
+	float startRadians = fromAngle * PI / 180;
+
+	float fromX = SUBLOC_INFO[eInfo.from].dx;
+	float fromY = SUBLOC_INFO[eInfo.from].dy;
+
+	return vec!(2, float)(
+		// big circle has radius of 1.5
+		// we swap sin and cos to get at the derivative of the circle
+		fromX + 1.5 * (cos(currentRadians) - cos(startRadians)),
+		fromY + 1.5 * (sin(currentRadians) - sin(startRadians)),
+		// fromX, fromY
+	);
 }
 
 float calc_pivot_x(Edge e, float dist) {

@@ -41,7 +41,7 @@ class MainState : DialogBuilder {
 		/* MENU */
 		buildDialog(window.resources.jsons["title-layout"]);
 		
-		auto mapData = window.resources.jsons["test-map2"];
+		auto mapData = window.resources.jsons["test-map3"];
 		model.initGame(mapData);
 
 		auto canvas = getElementById("canvas");
