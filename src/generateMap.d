@@ -2,7 +2,7 @@ module generateMap;
 
 import helix.util.vec;
 import std.random;
-import isomap;
+import map;
 import model;
 
 void generate(MyGrid mapTT, Model model) {

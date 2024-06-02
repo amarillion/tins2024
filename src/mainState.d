@@ -15,7 +15,7 @@ import helix.layout;
 import dialog;
 import dialogBuilder;
 import isocanvas;
-import isomap;
+import map;
 import model;
 
 class MainState : DialogBuilder {

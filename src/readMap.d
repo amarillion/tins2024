@@ -7,7 +7,7 @@ import std.algorithm;
 import helix.util.vec;
 import helix.util.coordrange;
 
-import isomap;
+import map;
 
 struct TileDeltas {
 	short dz = 0;
@@ -79,10 +79,10 @@ MyGrid readMapFromTiledJSON(JSONValue node) {
 			
 			// derive height and slant from the tile number
 			short dz = TILE_DELTAZ[tileXX].dz;
-			result[p].z = ((511 - tileIdx) / 32) + dz;
-			result[p].dzbot = to!short(TILE_DELTAZ[tileXX].dzbot - dz);
-			result[p].dzleft = to!short(TILE_DELTAZ[tileXX].dzleft - dz);
-			result[p].dzright = to!short(TILE_DELTAZ[tileXX].dzright - dz);
+			result[p].cell.z = ((511 - tileIdx) / 32) + dz;
+			result[p].cell.dzbot = to!short(TILE_DELTAZ[tileXX].dzbot - dz);
+			result[p].cell.dzleft = to!short(TILE_DELTAZ[tileXX].dzleft - dz);
+			result[p].cell.dzright = to!short(TILE_DELTAZ[tileXX].dzright - dz);
 
 			import std.stdio;
 		}

@@ -10,6 +10,7 @@ import allegro5.allegro_primitives;
 import std.math;
 import std.stdio;
 import std.conv;
+import std.algorithm;
 
 import helix.util.grid;
 import helix.util.vec;
@@ -22,8 +23,6 @@ const int TILEX = 64;
 const int TILEY = 64;
 const int TILEZ = 32;
 
-import isomap : Tile;
-
 const int DEFAULT_TILEX = 64;
 const int DEFAULT_TILEY = 64;
 const int DEFAULT_TILEZ = 32;
@@ -34,6 +33,108 @@ const int DEFAULT_TILEV = 64;
 
 // default maximum height of a map. Affects origin and clipping rectangle
 const int DEFAULT_DIM_MZ = 20;
+
+/**
+ * a square, slanted  surface.
+ *
+ * z is the height, in tile units, of the top corner.
+ *
+ * dzleft, dzright and dzbot are the z-delta, in tile units, of the left,
+ * right and bottom corners
+ */
+struct Cell {
+	int z = 0;
+	short dzleft = 0;
+	short dzright = 0;
+	short dzbot = 0;
+
+	bool isVerticalSplit() const
+	{
+		return dzbot == 0;
+	}
+
+	/** helper to calculate the z height at any corner of a Cell. */
+	int getZ(int dx, int dy)
+	{
+		assert (dx == 0 || dx == 1);
+		assert (dy == 0 || dy == 1);
+		
+		switch (dx + 2 * dy)
+		{
+			case 1: return z + dzright;
+			case 2: return z + dzleft;
+			case 3: return z + dzbot;
+			default: return z;
+		}
+	}
+
+	// lift corner of a single tile
+	void liftCorner(int delta, int side)
+	{
+		switch (side)
+		{
+		case 0:
+			z += delta;
+			dzleft -= delta;
+			dzright -= delta;
+			dzbot -= delta;
+			break;
+		case 1:
+			dzright += delta;
+			break;
+		case 2:
+			dzbot += delta;
+			break;
+		case 3:
+			dzleft += delta;
+			break;
+		default:
+			assert (false);
+		}
+	}
+
+	void setCorner(int value, int side)
+	{
+		int delta = value - z;
+		switch (side)
+		{
+		case 0:
+			z += delta;
+			dzleft -= delta;
+			dzright -= delta;
+			dzbot -= delta;
+			break;
+		case 1:
+			dzright = to!short(delta);
+			break;
+		case 2:
+			dzbot = to!short(delta);
+			break;
+		case 3:
+			dzleft = to!short(delta);
+			break;
+		default:
+			assert (false);
+		}
+	}
+
+	// return the z of the highest corner.
+	int getMaxHeight()
+	{
+		return max(z, max (z + dzbot, max (z + dzleft, z + dzright)));
+	}
+
+	// return the z of the lowest corner
+	int getMinHeight()
+	{
+		return min(z, min (z + dzbot, min (z + dzleft, z + dzright)));
+	}
+
+	bool isFlat()
+	{
+		return (dzbot == 0 && dzleft == 0 && dzright == 0);
+	}
+}
 
 /** Used only for drawing polygons atm */
 struct Coord3D {
@@ -423,8 +524,7 @@ public:
 		tilesPerRow = al_get_bitmap_width(tiles.ptr) / u;
 	}
 
-
-	void drawSurface(const GraphicsContext gc, int mx, int my, const Tile c, int tileIdx) {
+	void drawSurface(const GraphicsContext gc, int mx, int my, const Cell c, int tileIdx) {
 		ALLEGRO_VERTEX[6] coord; // hold memory for coordinates
 
 		coord[] = ALLEGRO_VERTEX(0, 0, 0, 0, 0, Color.BLACK); // zero out
@@ -632,7 +732,7 @@ public:
 	}
 	*/
 
-	void drawSurfaceTile(const GraphicsContext gc, int mx, int my, const Tile c, int tilei, ALLEGRO_VERTEX *coord) {
+	void drawSurfaceTile(const GraphicsContext gc, int mx, int my, const Cell c, int tilei, ALLEGRO_VERTEX *coord) {
 		// ALLEGRO_COLOR baseColor = al_map_rgb (192, 255, 192);
 		ALLEGRO_COLOR baseColor = al_map_rgb (255, 255, 255);
 
@@ -775,7 +875,7 @@ public:
 		*/
 	}
 
-	void drawLeftWall(const GraphicsContext gc, int mx, int my, const Tile c) {
+	void drawLeftWall(const GraphicsContext gc, int mx, int my, const Cell c) {
 		int[4] x;
 		int[4] y;
 		int[4] z;
@@ -802,7 +902,7 @@ public:
 		drawIsoPoly(gc, 4, x, y, z, color);
 	}
 
-	void drawRightWall(const GraphicsContext gc, int mx, int my, const Tile c) {
+	void drawRightWall(const GraphicsContext gc, int mx, int my, const Cell c) {
 		int[4] x;
 		int[4] y;
 		int[4] z;

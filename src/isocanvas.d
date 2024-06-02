@@ -17,7 +17,7 @@ import helix.color;
 import helix.allegro.bitmap;
 
 import isogrid;
-import isomap;
+import map;
 
 void drawMap(const GraphicsContext gc, IsoGrid iso, MyGrid map)
 {
@@ -29,15 +29,15 @@ void drawMap(const GraphicsContext gc, IsoGrid iso, MyGrid map)
 			// enable for debugging:
 			// iso.drawMapSurfaceWire(gc, mx, my, 0, 1, 1, Color.BLUE);
 			
-			iso.drawSurface(gc, mx, my, c, c.terrain_tile);
+			iso.drawSurface(gc, mx, my, c.cell, c.terrain_tile);
 			
 			// draw tracks
 			foreach(i; c.track_tile) {
-				iso.drawSurface(gc, mx, my, c, i);
+				iso.drawSurface(gc, mx, my, c.cell, i);
 			}
 			
-			iso.drawLeftWall(gc, mx, my, c);
-			iso.drawRightWall(gc, mx, my, c);
+			iso.drawLeftWall(gc, mx, my, c.cell);
+			iso.drawRightWall(gc, mx, my, c.cell);
 		}
 }
 
