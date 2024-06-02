@@ -29,8 +29,8 @@ const int DEFAULT_TILEY = 64;
 const int DEFAULT_TILEZ = 32;
 
 // default tile size in texture space
-const int DEFAULT_TILEU = 32;
-const int DEFAULT_TILEV = 32;
+const int DEFAULT_TILEU = 64;
+const int DEFAULT_TILEV = 64;
 
 // default maximum height of a map. Affects origin and clipping rectangle
 const int DEFAULT_DIM_MZ = 20;
@@ -405,7 +405,7 @@ private:
 	int tilev = DEFAULT_TILEV;
 
 	// number of tiles in a row.
-	int tilesPerRow = 1;
+	int tilesPerRow = 16;
 	Bitmap tiles = null;
 
 public:
@@ -424,7 +424,7 @@ public:
 	}
 
 
-	void drawSurface(const GraphicsContext gc, int mx, int my, const Tile c) {
+	void drawSurface(const GraphicsContext gc, int mx, int my, const Tile c, int tileIdx) {
 		ALLEGRO_VERTEX[6] coord; // hold memory for coordinates
 
 		coord[] = ALLEGRO_VERTEX(0, 0, 0, 0, 0, Color.BLACK); // zero out
@@ -432,10 +432,8 @@ public:
 		// ALLEGRO_COLOR baseColor = al_map_rgb (192, 255, 192);
 		ALLEGRO_COLOR baseColor = al_map_rgb (255, 255, 255);
 
-		int tilei = c.terrain_tile;
-
-		int ubase = tileu * tilei;
-		int vbase = 0;
+		int ubase = tileu * (tileIdx % tilesPerRow);
+		int vbase = tilev * (tileIdx / tilesPerRow);
 
 		canvasFromIso_f (tilex * mx,
 						tiley * my,

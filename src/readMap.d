@@ -2,6 +2,7 @@ module readMap;
 
 import std.json;
 import std.conv;
+import std.algorithm;
 
 import helix.util.vec;
 import helix.util.coordrange;
@@ -87,5 +88,21 @@ MyGrid readMapFromTiledJSON(JSONValue node) {
 		}
 	}
 
+	// now let's read tracks
+	foreach (l; node["layers"].array) {
+		if (l["type"].str != "tilelayer") { continue; }
+		string name = l["name"].str;
+		import std.stdio;
+		writeln(name, name.startsWith("Track"));
+		if (!name.startsWith("Track")) { continue; }
+
+		auto data = l["data"].array;
+		foreach (p; PointRange(result.size)) {
+			const tileIdx = to!int(data[result.toIndex(p)].integer - 1);
+			if (tileIdx >= 0) {
+				result[p].track_tile ~= tileIdx;
+			}
+		}
+	}
 	return result;
 }

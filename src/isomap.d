@@ -120,7 +120,7 @@ struct Tile {
 	 ***********************/
 	
 	int terrain_tile = -1;
-	int track_tile;
+	int[] track_tile = [];
 	//~ int semaphore_tile;
 	int building_tile = -1;
 	
