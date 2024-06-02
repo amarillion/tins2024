@@ -7,7 +7,8 @@ import model;
 
 void generate(MyGrid mapTT, Model model) {
 	// add trees
-	for (int i = 0; i < 250; ++i) {
+	int num_trees = mapTT.size.x * mapTT.size.y / 10;
+	for (int i = 0; i < num_trees; ++i) {
 		Point p = Point(uniform(0, mapTT.size.x), uniform(0, mapTT.size.y));
 		if (mapTT[p].track_tile.length > 0 || mapTT[p].building_tile > 0 || mapTT[p].terrain_tile > 0) {
 			continue;

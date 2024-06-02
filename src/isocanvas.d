@@ -18,6 +18,7 @@ import helix.allegro.bitmap;
 
 import isogrid;
 import map;
+import model;
 
 void drawMap(const GraphicsContext gc, IsoGrid iso, MyGrid map)
 {
@@ -48,12 +49,14 @@ class IsoCanvas : Component
 	int cursorx = 0;
 	int cursory = 0;
 	MyGrid map;
+	Model model;
 	IsoGrid iso;
 	
-	this(MainLoop window, MyGrid _map)
+	this(MainLoop window, Model _model)
 	{
 		super(window, "isocanvas");
-		map = _map;
+		model = _model;
+		map = model.mapTT;
 		iso = new IsoGrid(map.size.x, map.size.y, 20, TILEX, TILEZ);
 		initResources();
 	}
@@ -61,16 +64,15 @@ class IsoCanvas : Component
 	Bitmap[18] tracks;
 	Bitmap[8] TL;
 	Bitmap[9] buildings;
-	Bitmap[6] wagon;
+	Bitmap[16] wagon;
+	Bitmap[16] locomotive;
 	
 	final void initResources() {
 		iso.setTexture(window.resources.bitmaps["tileset"], 64, 64);
 
 		// resources already inited at this point.
-		// obtain arrays of tiles
 
 		//NB tracks 0-15 are obsolete
-
 		tracks[16] = window.resources.bitmaps["station1"];
 		tracks[17] = window.resources.bitmaps["station2"];
 
@@ -89,33 +91,52 @@ class IsoCanvas : Component
 			buildings[i] = buildingSheet.subBitmap(VALID_BUILDINGS[i] * 128, 0, 128, buildingSheet.h);
 		}
 
-		wagon[0] = window.resources.bitmaps["trein1"];
-		wagon[1] = window.resources.bitmaps["trein2"];
-		wagon[2] = window.resources.bitmaps["trein3"];
-		wagon[3] = window.resources.bitmaps["trein4"];
-		wagon[4] = window.resources.bitmaps["trein5"];
-		wagon[5] = window.resources.bitmaps["trein6"];
-
+		Bitmap wagonSheet = window.resources.bitmaps["wagon-iso"];
+		Bitmap locomotiveSheet = window.resources.bitmaps["locomotive-iso"];
+		for (int i = 0; i < wagon.length; ++i) {
+			wagon[i] = wagonSheet.subBitmap(i * 64, 0, 64, 64);
+			locomotive[i] = locomotiveSheet.subBitmap(i * 64, 0, 64, 64);
+		}
 	}
 
-	override void update() {}
-	
+	void done() {
+		foreach(i; wagon) i.destroy();
+		foreach(i; locomotive) i.destroy();
+	}
+
 	void drawCursor (const GraphicsContext gc)
 	{
 		if (!map) return;
 		if (cursorx >= 0 && cursory >= 0 &&
-			cursorx < map.size.x && cursory < map.size.y)
-		{
-			int rx, ry;
-			iso.canvasFromMap(cursorx, cursory, &rx, &ry);
-			int x = rx - gc.offset.x;
-			int y = ry - gc.offset.y;
-
-			al_draw_line (x, y,           x + 32, y + 15, Color.YELLOW, 1.0);
-			al_draw_line (x + 32, y + 15, x, y + 31,      Color.YELLOW, 1.0);
-			al_draw_line (x, y + 31,      x - 31, y + 15, Color.YELLOW, 1.0);
-			al_draw_line (x - 32, y + 15, x, y,           Color.YELLOW, 1.0);
+			cursorx < map.size.x && cursory < map.size.y) {
+			iso.drawMapSurfaceWire(gc, cursorx, cursory, 0, 1, 1, Color.YELLOW);
 		}
+	}
+
+	void drawTrains(const GraphicsContext gc) {
+		float rx, ry;
+		foreach (train; model.train) {
+			Bitmap ss = wagon[0]; // TODO rotate
+			iso.canvasFromIso_f(TILEX * train.getLx(), TILEY * train.getLy(), TILEZ * train.getLz(), rx, ry);
+			al_draw_bitmap (ss.ptr,
+				rx - gc.offset.x - ss.w / 2,
+				ry - gc.offset.y - ss.h / 2,
+				0);
+
+			import std.stdio;
+			writefln("Train at %s (%s, %s)", train.node.pos, train.getLx(), train.getLy());
+
+			foreach (w; train.wagons) {
+				writefln("Wagon at %s, %s", w.lx, w.ly);
+				Bitmap s = wagon[0]; // TODO rotate
+				iso.canvasFromIso_f(TILEX * w.lx, TILEY * w.ly, TILEZ * 0.0f, rx, ry);
+				al_draw_bitmap (s.ptr,
+					rx - gc.offset.x - s.w / 2,
+					ry - gc.offset.y - s.h / 2,
+					0);
+			}
+		}
+
 	}
 
 	override void draw (GraphicsContext gc)
@@ -124,10 +145,9 @@ class IsoCanvas : Component
 		
 		drawMap(gc, iso, map);
 		drawCursor(gc);
+		drawTrains(gc);
 		
 		foreach(p; PointRange(map.size)) {
-			int ix = p.x;
-			int iy = p.y;
 
 			float rx, ry;
 			Point bottom = p + 1; // add one because we want to match the bottom corner of the tile.
@@ -158,6 +178,10 @@ class IsoCanvas : Component
 			cursorx = ncursorx;
 			cursory = ncursory;
 		}
+	}
+
+	override void update() {
+		model.update();
 	}
 
 }

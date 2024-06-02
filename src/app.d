@@ -40,6 +40,8 @@ void main(string[] args)
 		mainloop.resources.addFile("data/title-layout.json");
 		mainloop.resources.addFile("data/dialog-layout.json");
 		mainloop.resources.addFile("data/themap.json");
+		
+		mainloop.resources.addGlob("data/test-map*.json");
 
 		mainloop.resources.addGlob("data/*.png");
 

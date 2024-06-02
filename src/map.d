@@ -88,27 +88,34 @@ enum Edge {
 }
 
 enum EdgeInfo[Edge] EDGE_INFO = [
-	Edge.UNDEFINED: EdgeInfo(Edge.N, SubLoc.N, SubLoc.N, 0, 0, 0, 0.0f),
-	Edge.N: EdgeInfo(Edge.N, SubLoc.N, SubLoc.N, 0, -1, 0, 1.0f),
-	Edge.E: EdgeInfo(Edge.E, SubLoc.E, SubLoc.E, 1,  0, 0, 1.0f),
-	Edge.S: EdgeInfo(Edge.S, SubLoc.S, SubLoc.S, 0,  1, 0, 1.0f),
-	Edge.W: EdgeInfo(Edge.W, SubLoc.W, SubLoc.W, -1, 0, 0, 1.0f),
+	Edge.UNDEFINED: EdgeInfo(Edge.UNDEFINED, SubLoc.CENTER, SubLoc.CENTER, 0, 0, 0, 0.0f),
 
-	Edge.NU: EdgeInfo(Edge.NU, SubLoc.N, SubLoc.N, 0, -1, 1, 1.0f),
-	Edge.EU: EdgeInfo(Edge.EU, SubLoc.E, SubLoc.E, 1,  0, 1, 1.0f),
-	Edge.SU: EdgeInfo(Edge.SU, SubLoc.S, SubLoc.S, 0,  1, 1, 1.0f),
-	Edge.WU: EdgeInfo(Edge.WU, SubLoc.W, SubLoc.W, -1, 0, 1, 1.0f),
+	Edge.N: EdgeInfo(Edge.N, SubLoc.S, SubLoc.S, 0, -1, 0, 1.0f),
+	Edge.E: EdgeInfo(Edge.E, SubLoc.W, SubLoc.W, 1,  0, 0, 1.0f),
+	Edge.S: EdgeInfo(Edge.S, SubLoc.N, SubLoc.N, 0,  1, 0, 1.0f),
+	Edge.W: EdgeInfo(Edge.W, SubLoc.E, SubLoc.E, -1, 0, 0, 1.0f),
 
-	Edge.ND: EdgeInfo(Edge.ND, SubLoc.N, SubLoc.N, 0, -1, -1, 1.0f),
-	Edge.ED: EdgeInfo(Edge.ED, SubLoc.E, SubLoc.E, 1,  0, -1, 1.0f),
-	Edge.SD: EdgeInfo(Edge.SD, SubLoc.S, SubLoc.S, 0,  1, -1, 1.0f),
-	Edge.WD: EdgeInfo(Edge.WD, SubLoc.W, SubLoc.W, -1, 0, -1, 1.0f),
+	Edge.NU: EdgeInfo(Edge.NU, SubLoc.S, SubLoc.S, 0, -1, 1, 1.0f),
+	Edge.EU: EdgeInfo(Edge.EU, SubLoc.W, SubLoc.W, 1,  0, 1, 1.0f),
+	Edge.SU: EdgeInfo(Edge.SU, SubLoc.N, SubLoc.N, 0,  1, 1, 1.0f),
+	Edge.WU: EdgeInfo(Edge.WU, SubLoc.E, SubLoc.E, -1, 0, 1, 1.0f),
+
+	Edge.ND: EdgeInfo(Edge.ND, SubLoc.S, SubLoc.S,  0, -1, -1, 1.0f),
+	Edge.ED: EdgeInfo(Edge.ED, SubLoc.W, SubLoc.W,  1,  0, -1, 1.0f),
+	Edge.SD: EdgeInfo(Edge.SD, SubLoc.N, SubLoc.N,  0,  1, -1, 1.0f),
+	Edge.WD: EdgeInfo(Edge.WD, SubLoc.E, SubLoc.E, -1,  0, -1, 1.0f),
 	
 	// quarter circle with radius 0.5
-	Edge.NE_small: EdgeInfo(Edge.NE_small, SubLoc.N, SubLoc.E,  1, -1, 0, 0.25 * PI),
-	Edge.NW_small: EdgeInfo(Edge.NW_small, SubLoc.N, SubLoc.W, -1, -1, 0, 0.25 * PI),
-	Edge.SE_small: EdgeInfo(Edge.SE_small, SubLoc.S, SubLoc.E,  1,  1, 0, 0.25 * PI),
-	Edge.SW_small: EdgeInfo(Edge.SW_small, SubLoc.S, SubLoc.W, -1,  1, 0, 0.25 * PI),
+	// going from N to E
+	Edge.NE_small: EdgeInfo(Edge.NE_small, SubLoc.S, SubLoc.W,  1,  0, 0, 0.25 * PI),
+	Edge.NW_small: EdgeInfo(Edge.NW_small, SubLoc.S, SubLoc.E, -1,  0, 0, 0.25 * PI),
+	Edge.SE_small: EdgeInfo(Edge.SE_small, SubLoc.N, SubLoc.W,  1,  0, 0, 0.25 * PI),
+	Edge.SW_small: EdgeInfo(Edge.SW_small, SubLoc.N, SubLoc.E, -1,  0, 0, 0.25 * PI),
+
+	Edge.EN_small: EdgeInfo(Edge.EN_small, SubLoc.W, SubLoc.S,  0, -1, 0, 0.25 * PI),
+	Edge.ES_small: EdgeInfo(Edge.ES_small, SubLoc.W, SubLoc.N,  0,  1, 0, 0.25 * PI),
+	Edge.WN_small: EdgeInfo(Edge.WN_small, SubLoc.E, SubLoc.S,  0, -1, 0, 0.25 * PI),
+	Edge.WS_small: EdgeInfo(Edge.WS_small, SubLoc.E, SubLoc.N,  0,  1, 0, 0.25 * PI),
 ];
 
 // Must be struct, because we want to create instances and do equality checks
@@ -126,7 +133,7 @@ struct Node {
 	 */
 	Node followReverse(Edge e) const {
 		auto eInfo = EDGE_INFO[e]; 
-		assert (eInfo.to == subLoc, "followReverse(...) has wrong toSubLoc");
+		// assert (eInfo.to == subLoc, "followReverse(...) has wrong toSubLoc");
 		return Node(
 			pos - Point(eInfo.dx, eInfo.dy),
 			eInfo.from
@@ -145,9 +152,6 @@ struct Node {
 
 struct Tile {
 	Cell cell;
-	
-	Node[SubLoc] nodes;
-	Node[Edge] links;
 
 	/***********************
 	 * spefic to this game

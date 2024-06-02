@@ -21,13 +21,18 @@ import model;
 class MainState : DialogBuilder {
 
 	ResourceManager userResources;
+	Model model = new Model();
+	IsoCanvas isoCanvas;
 
 	this(MainLoop window) {
 		super(window);
 
 		userResources = new ResourceManager();
 
-		window.onClose.add(() { destroy(userResources); });
+		window.onClose.add(() { 
+			isoCanvas.done();
+			destroy(userResources); 
+		});
 		
 		window.onDisplaySwitch.add((switchIn) { 
 			if (switchIn) { userResources.refreshAll(); }
@@ -36,14 +41,12 @@ class MainState : DialogBuilder {
 		/* MENU */
 		buildDialog(window.resources.jsons["title-layout"]);
 		
-		auto model = new Model();
-
-		auto mapData = window.resources.jsons["themap"];
+		auto mapData = window.resources.jsons["test-map1"];
 		model.initGame(mapData);
 
 		auto canvas = getElementById("canvas");
 
-		auto isoCanvas = new IsoCanvas(window, model.mapTT);
+		isoCanvas = new IsoCanvas(window, model);
 		
 		// auto vp = new ViewPort(window);
 		// vp.setRelative(0,0,16,16,0,0,LayoutRule.STRETCH,LayoutRule.STRETCH);
