@@ -64,7 +64,7 @@ class IsoCanvas : Component
 	Bitmap[6] wagon;
 	
 	final void initResources() {
-		iso.setTexture(window.resources.bitmaps["tileset-hires"], 64, 64);
+		iso.setTexture(window.resources.bitmaps["tileset"], 64, 64);
 
 		// resources already inited at this point.
 		// obtain arrays of tiles

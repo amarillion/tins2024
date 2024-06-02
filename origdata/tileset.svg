@@ -2,14 +2,14 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="512"
-   height="512"
+   width="1024"
+   height="1024"
    viewBox="0 0 512 512"
    id="svg2"
    version="1.1"
    inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
    sodipodi:docname="tileset.svg"
-   inkscape:export-filename="/home/martijn/prg/gamedev/tins2024/data/tileset-hires.png"
+   inkscape:export-filename="/home/martijn/prg/gamedev/tins2024/data/tileset.png"
    inkscape:export-xdpi="192"
    inkscape:export-ydpi="192"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -40,9 +40,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.959798"
-     inkscape:cx="123.99622"
-     inkscape:cy="503.18224"
+     inkscape:zoom="1.4"
+     inkscape:cx="123.21428"
+     inkscape:cy="850.35713"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -55,7 +55,8 @@
      inkscape:pagecheckerboard="0"
      guidetolerance="1"
      objecttolerance="1"
-     gridtolerance="10">
+     gridtolerance="10"
+     scale-x="0.5">
     <inkscape:grid
        type="xygrid"
        id="grid4136"
@@ -1313,7 +1314,7 @@
     <path
        id="rect1468-23"
        style="display:inline;overflow:visible;fill:#ffffff;fill-rule:evenodd;stroke-width:1px;enable-background:accumulate"
-       d="m 56.2778,1024.4568 v 19.7495 l 4.3286,0.213 -12.6064,4.4375 -12.8866,-4.4375 5.1644,-0.014 v -19.9482 z"
+       d="m 35.6599,1028.2389 h 19.7495 l 0.213,-4.3286 4.4375,12.6064 -4.4375,12.8866 -0.014,-5.1644 H 35.6602 Z"
        sodipodi:nodetypes="cccccccc" />
     <text
        xml:space="preserve"
@@ -1329,27 +1330,27 @@
     <path
        id="rect1468-6-7"
        style="display:inline;overflow:visible;fill:#ffffff;fill-rule:evenodd;stroke-width:1px;enable-background:accumulate"
-       d="m 88.2778,1024.6786 v 19.7495 l 4.3286,0.213 -12.6064,4.4375 -12.8866,-4.4375 5.1644,-0.014 v -19.9482 z"
+       d="m 67.6599,1028.4607 h 19.7495 l 0.213,-4.3286 4.4375,12.6064 -4.4375,12.8866 -0.014,-5.1644 H 67.6602 Z"
        sodipodi:nodetypes="cccccccc" />
     <path
        id="rect1468-23-4"
        style="display:inline;overflow:visible;fill:#ffffff;fill-rule:evenodd;stroke-width:1px;enable-background:accumulate"
-       d="m 120.2778,1025.0919 v 19.7495 l 4.3286,0.213 -12.6064,4.4375 -12.8866,-4.4375 5.1644,-0.014 v -19.9482 z"
+       d="m 99.6599,1028.874 h 19.7495 l 0.213,-4.3286 4.4375,12.6064 -4.4375,12.8866 -0.014,-5.1644 H 99.6602 Z"
        sodipodi:nodetypes="cccccccc" />
     <path
        id="rect1468-6-7-7"
        style="display:inline;overflow:visible;fill:#ffffff;fill-rule:evenodd;stroke-width:1px;enable-background:accumulate"
-       d="m 152.2778,1025.2509 v 19.7495 l 4.3286,0.213 -12.6064,4.4375 -12.8866,-4.4375 5.1644,-0.014 v -19.9482 z"
+       d="m 131.6599,1029.033 h 19.7495 l 0.213,-4.3286 4.4375,12.6064 -4.4375,12.8866 -0.014,-5.1644 h -19.9482 z"
        sodipodi:nodetypes="cccccccc" />
     <path
        id="rect1468-23-8"
        style="display:inline;overflow:visible;fill:#ffffff;fill-rule:evenodd;stroke-width:1px;enable-background:accumulate"
-       d="m 184,1024.6127 v 19.7495 l 4.3286,0.213 -12.6064,4.4375 -12.8866,-4.4375 5.1644,-0.014 v -19.9482 z"
+       d="m 163.3821,1028.3948 h 19.7495 l 0.213,-4.3286 4.4375,12.6064 -4.4375,12.8866 -0.014,-5.1644 h -19.9482 z"
        sodipodi:nodetypes="cccccccc" />
     <path
        id="rect1468-6-7-4"
        style="display:inline;overflow:visible;fill:#ffffff;fill-rule:evenodd;stroke-width:1px;enable-background:accumulate"
-       d="m 215.56474,1024.6127 v 19.7495 l 4.3286,0.213 -12.6064,4.4375 -12.8866,-4.4375 5.1644,-0.014 v -19.9482 z"
+       d="m 194.94684,1028.3948 h 19.7495 l 0.213,-4.3286 4.4375,12.6064 -4.4375,12.8866 -0.014,-5.1644 h -19.9482 z"
        sodipodi:nodetypes="cccccccc" />
     <text
        xml:space="preserve"
@@ -1452,32 +1453,32 @@
     <path
        id="rect1468"
        style="display:inline;overflow:visible;opacity:1;fill:#ffffff;fill-rule:evenodd;stroke-width:1px;enable-background:accumulate"
-       d="M 36.037537,996.36218 H 55.786969 L 56,992.03363 60.437468,1004.64 56,1017.5266 55.98566,1012.3622 H 36.037537 Z"
+       d="m 56.655438,992.58015 v 19.74945 l 4.32855,0.213 -12.60637,4.4375 -12.8866,-4.4375 5.1644,-0.014 v -19.94815 z"
        sodipodi:nodetypes="cccccccc" />
     <path
        id="rect1468-6"
        style="display:inline;overflow:visible;fill:#ffffff;fill-rule:evenodd;stroke-width:1px;enable-background:accumulate"
-       d="M 67.602278,996.36216 H 87.35171 l 0.213031,-4.3286 4.437468,12.60644 -4.437468,12.8866 -0.01434,-5.1644 H 67.602278 Z"
+       d="m 88.220164,992.58011 v 19.74939 l 4.3286,0.2131 -12.60644,4.4374 -12.886601,-4.4374 5.1644,-0.014 v -19.94809 z"
        sodipodi:nodetypes="cccccccc" />
     <path
        id="rect1468-7"
        style="display:inline;overflow:visible;fill:#ffffff;fill-rule:evenodd;stroke-width:1px;enable-background:accumulate"
-       d="m 100.4871,996.36216 h 19.74943 l 0.21303,-4.3285 4.43747,12.60634 -4.43747,12.8866 -0.0143,-5.1644 H 100.4871 Z"
+       d="m 121.10504,992.58017 v 19.74943 l 4.3285,0.213 -12.60634,4.4375 -12.886605,-4.4375 5.164405,-0.014 v -19.94813 z"
        sodipodi:nodetypes="cccccccc" />
     <path
        id="rect1468-6-9"
        style="display:inline;overflow:visible;fill:#ffffff;fill-rule:evenodd;stroke-width:1px;enable-background:accumulate"
-       d="m 132.05184,996.36216 h 19.74943 l 0.21303,-4.3286 4.43747,12.60644 -4.43747,12.8866 -0.0143,-5.1644 h -19.94816 z"
+       d="m 152.66972,992.58011 v 19.74939 l 4.3286,0.2131 -12.60644,4.4374 -12.8866,-4.4374 5.1644,-0.014 v -19.94819 z"
        sodipodi:nodetypes="cccccccc" />
     <path
        id="rect1468-2"
        style="display:inline;overflow:visible;fill:#ffffff;fill-rule:evenodd;stroke-width:1px;enable-background:accumulate"
-       d="M 164.25057,996.36216 H 184 l 0.21303,-4.3286 4.43747,12.60644 -4.43747,12.8866 -0.0143,-5.1644 h -19.94812 z"
+       d="m 184.86845,992.58012 v 19.74938 l 4.3286,0.2131 -12.60644,4.4374 -12.8866,-4.4374 5.1644,-0.014 v -19.94814 z"
        sodipodi:nodetypes="cccccccc" />
     <path
        id="rect1468-6-0"
        style="display:inline;overflow:visible;fill:#ffffff;fill-rule:evenodd;stroke-width:1px;enable-background:accumulate"
-       d="m 195.81531,996.36206 h 19.74943 l 0.21303,-4.3286 4.43747,12.60654 -4.43747,12.8866 -0.0143,-5.1644 h -19.94812 z"
+       d="m 216.43325,992.58007 v 19.74943 l 4.3286,0.213 -12.60654,4.4375 -12.8866,-4.4375 5.1644,-0.014 v -19.9481 z"
        sodipodi:nodetypes="cccccccc" />
     <text
        xml:space="preserve"
