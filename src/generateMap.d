@@ -8,10 +8,14 @@ import model;
 void generate(MyGrid mapTT, Model model) {
 	// add trees
 	for (int i = 0; i < 250; ++i) {
-		mapTT[Point(uniform(0, mapTT.size.x), uniform(0, mapTT.size.y))]
-			.building_tile = uniform(7, 9);
+		Point p = Point(uniform(0, mapTT.size.x), uniform(0, mapTT.size.y));
+		if (mapTT[p].track_tile.length > 0 || mapTT[p].building_tile > 0 || mapTT[p].terrain_tile > 0) {
+			continue;
+		}
+		mapTT[p].building_tile = uniform(7, 9);
 	}
-
+	return;
+	/*
 	//~ // add cities
 	int radius = 10;
 	string[] cityNames = [
@@ -107,4 +111,5 @@ void generate(MyGrid mapTT, Model model) {
 		}
 		mapTT[Point(x, y)].building_tile = 0; // church in the center
 	}
+	*/
 }

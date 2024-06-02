@@ -125,23 +125,24 @@ class IsoCanvas : Component
 		drawMap(gc, iso, map);
 		drawCursor(gc);
 		
-		for (int ix = 0; ix < map.size.x; ++ix)
-			for (int iy = 0; iy < map.size.y; ++iy)
-			{
-				// TODO: fill in z coord
-				float rx, ry;
-				iso.canvasFromIso_f(ix * TILEX, iy * TILEY, 1, rx, ry); // TODO: why 1?
-				rx -= gc.offset.x;
-				ry -= gc.offset.y;
+		foreach(p; PointRange(map.size)) {
+			int ix = p.x;
+			int iy = p.y;
 
-				int idx = map[Point(ix, iy)].building_tile;
-				if (idx > 0)
-				{
-					int ww = buildings[idx].w;
-					int hh = buildings[idx].h;
-					al_draw_bitmap(buildings[idx].ptr, rx - (ww / 2), ry - hh, 0);
-				}
+			float rx, ry;
+			Point bottom = p + 1; // add one because we want to match the bottom corner of the tile.
+			iso.canvasFromIso_f(bottom.x * TILEX, bottom.y * TILEY, map[p].cell.z * TILEZ, rx, ry);
+			rx -= gc.offset.x;
+			ry -= gc.offset.y;
+
+			int idx = map[p].building_tile;
+			if (idx > 0)
+			{
+				int ww = buildings[idx].w;
+				int hh = buildings[idx].h;
+				al_draw_bitmap(buildings[idx].ptr, rx - (ww / 2), ry - hh, 0);
 			}
+		}
 	}
 	
 	override void onMouseMove(Point p)

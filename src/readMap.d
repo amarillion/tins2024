@@ -104,5 +104,19 @@ MyGrid readMapFromTiledJSON(JSONValue node) {
 			}
 		}
 	}
+
+	// let's read buildings
+	foreach (l; node["layers"].array) {
+		if (l["type"].str != "tilelayer") { continue; }
+		if (l["name"].str != "Buildings") { continue; }
+		
+		auto data = l["data"].array;
+		foreach (p; PointRange(result.size)) {
+			const tileIdx = to!int(data[result.toIndex(p)].integer - 1);
+			if (tileIdx >= 0) {
+				result[p].building_tile = tileIdx - 240; // TODO: hardcoded start value for building tiles.
+			}
+		}
+	}
 	return result;
 }
