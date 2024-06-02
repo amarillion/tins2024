@@ -29,8 +29,8 @@ const int DEFAULT_TILEY = 64;
 const int DEFAULT_TILEZ = 32;
 
 // default tile size in texture space
-const int DEFAULT_TILEU = 16;
-const int DEFAULT_TILEV = 16;
+const int DEFAULT_TILEU = 32;
+const int DEFAULT_TILEV = 32;
 
 // default maximum height of a map. Affects origin and clipping rectangle
 const int DEFAULT_DIM_MZ = 20;
