@@ -42,6 +42,9 @@ public:
 
 		TileMapper.mapTrackTiles(this);
 
+		/* 
+		//  Test pathfinding
+		
 		import std.stdio;
 		writeln("Trying to find a path");
 		Node current = links.keys[0];
@@ -57,7 +60,7 @@ public:
 			writefln("#%s: Going from %s to %s", i, current, next);
 			current = next;
 		}
-
+		*/
 		// create a new Train
 		Node start = links.keys[0];
 		Edge startDir = links[start].keys[0];
@@ -83,8 +86,6 @@ public:
 	}
 
 	void createEdge(Node src, Node dest, Edge edge) {
-		import std.stdio;
-		writefln("Creating edge from %s to %s via %s", src, dest, edge);
 		links[src][edge] = dest;
 	}
 

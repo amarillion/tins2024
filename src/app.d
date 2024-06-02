@@ -40,6 +40,7 @@ void main(string[] args)
 		mainloop.resources.addFile("data/title-layout.json");
 		mainloop.resources.addFile("data/dialog-layout.json");
 		mainloop.resources.addFile("data/themap.json");
+		mainloop.resources.addMusicFile("data/Chattanooga_wip2_loop.ogg");
 		
 		mainloop.resources.addGlob("data/test-map*.json");
 
@@ -52,6 +53,7 @@ void main(string[] args)
 		mainloop.addState("MainState", new MainState(mainloop));
 		mainloop.switchState("MainState");
 		
+		mainloop.audio.playMusic(mainloop.resources.music["Chattanooga_wip2_loop"].ptr, 1.0);
 		mainloop.run();
 
 		return 0;
