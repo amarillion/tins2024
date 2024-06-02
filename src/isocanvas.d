@@ -1,6 +1,7 @@
 module isocanvas;
 
 import std.stdio;
+import std.conv;
 
 import allegro5.allegro;
 import allegro5.allegro_primitives;
@@ -116,24 +117,16 @@ class IsoCanvas : Component
 	void drawTrains(const GraphicsContext gc) {
 		float rx, ry;
 		foreach (train; model.train) {
-			Bitmap ss = wagon[0]; // TODO rotate
-			iso.canvasFromIso_f(TILEX * train.getLx(), TILEY * train.getLy(), TILEZ * train.getLz(), rx, ry);
-			al_draw_bitmap (ss.ptr,
-				rx - gc.offset.x - ss.w / 2,
-				ry - gc.offset.y - ss.h / 2,
-				0);
-
-			import std.stdio;
-			writefln("Train at %s (%s, %s)", train.node.pos, train.getLx(), train.getLy());
-
+			bool first = true;
 			foreach (w; train.wagons) {
-				writefln("Wagon at %s, %s", w.lx, w.ly);
-				Bitmap s = wagon[0]; // TODO rotate
+				int rotation = to!int((w.angle + 45) * 16.0 / 360.0) % 16;
+				Bitmap s = first ? locomotive[rotation] : wagon[rotation];
 				iso.canvasFromIso_f(TILEX * w.lx, TILEY * w.ly, TILEZ * 0.0f, rx, ry);
 				al_draw_bitmap (s.ptr,
 					rx - gc.offset.x - s.w / 2,
 					ry - gc.offset.y - s.h / 2,
 					0);
+				first = false;
 			}
 		}
 

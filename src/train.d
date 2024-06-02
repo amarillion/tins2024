@@ -8,6 +8,7 @@ import map;
 struct Wagon {
 	float lx;
 	float ly;
+	float angle;
 	int spriteIdx;
 }
 
@@ -35,6 +36,16 @@ public:
 		this.dir = startDir;
 	}
 
+	static float getAngle(Edge dir, float steps) {
+		auto eInfo = EDGE_INFO[dir];
+		float frac = steps / eInfo.length;
+
+		float dAngle = SUBLOC_INFO[eInfo.to].degrees - SUBLOC_INFO[eInfo.from].degrees;
+		if (dAngle < 0) dAngle += 360;
+
+		return SUBLOC_INFO[eInfo.from].degrees + (dAngle * frac);
+	}
+
 	float getLx() {
 		return node.pos.x + EDGE_INFO[dir].calc_x(steps);
 	}
@@ -49,7 +60,7 @@ public:
 
 	void recalcWagons() {
 
-		const float DISTANCE_UNIT = 0.5;
+		const float DISTANCE_UNIT = 0.4; // distance between wagons as a fraction of a tile
 
 		float wagLx = getLx();
 		float wagLy = getLy();
@@ -62,11 +73,11 @@ public:
 		// skip first, we read it from current train pos
 		//	if (trailIt != trail.end()) trailIt++;
 
-		foreach (wagon; wagons) {
+		foreach (ref wagon; wagons) {
 			wagon.lx = wagLx;
 			wagon.ly = wagLy;
+			wagon.angle = getAngle(wagDir, wagSteps);
 
-			auto nextSubLoc = EDGE_INFO[wagDir].to;
 			if (trailIt < trail.length) {
 				// advance on trail...
 				wagSteps -= DISTANCE_UNIT;
@@ -75,7 +86,7 @@ public:
 					if (trailIt < trail.length) {
 						wagDir = trail[trailIt];
 						wagSteps += EDGE_INFO[wagDir].length;
-						wagLoc.followReverse(wagDir);
+						wagLoc = wagLoc.followReverse(wagDir);
 					}
 				}
 

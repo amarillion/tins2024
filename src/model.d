@@ -65,6 +65,8 @@ public:
 		t.wagons ~= Wagon(0, 0, 0);
 		t.wagons ~= Wagon(0, 0, 1);
 		t.wagons ~= Wagon(0, 0, 1);
+		t.wagons ~= Wagon(0, 0, 1);
+		t.wagons ~= Wagon(0, 0, 1);
 		train ~= t;
 	}
 

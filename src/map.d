@@ -27,18 +27,19 @@ struct SubLocInfo {
 	SubLoc loc;
 	float dx;
 	float dy;
+	float degrees; // starting from 0 = north, clockwise, because that is how the sprites are drawn
 }
 
 enum SubLocInfo[SubLoc] SUBLOC_INFO = [
-	SubLoc.CENTER: SubLocInfo(SubLoc.CENTER, 0.5, 0.5),
-	SubLoc.N: SubLocInfo(SubLoc.N, 0.5, 0.0),
-	SubLoc.E: SubLocInfo(SubLoc.E, 1.0, 0.5),
-	SubLoc.S: SubLocInfo(SubLoc.S, 0.5, 1.0),
-	SubLoc.W: SubLocInfo(SubLoc.W, 0.0, 0.5),
-	SubLoc.NE: SubLocInfo(SubLoc.NE, 1.0, 0.0),
-	SubLoc.SE: SubLocInfo(SubLoc.SE, 1.0, 1.0),
-	SubLoc.SW: SubLocInfo(SubLoc.SW, 0.0, 1.0),
-	SubLoc.NW: SubLocInfo(SubLoc.NW, 0.0, 0.0),
+	SubLoc.CENTER: SubLocInfo(SubLoc.CENTER, 0.5, 0.5, 0),
+	SubLoc.N: SubLocInfo(SubLoc.N, 0.5, 0.0, 180), // NB: if we're at subloc N, we're at the top of the tile facing south
+	SubLoc.E: SubLocInfo(SubLoc.E, 1.0, 0.5, 270),
+	SubLoc.S: SubLocInfo(SubLoc.S, 0.5, 1.0, 0),
+	SubLoc.W: SubLocInfo(SubLoc.W, 0.0, 0.5, 90),
+	SubLoc.NE: SubLocInfo(SubLoc.NE, 1.0, 0.0, 225),
+	SubLoc.SE: SubLocInfo(SubLoc.SE, 1.0, 1.0, 315),
+	SubLoc.SW: SubLocInfo(SubLoc.SW, 0.0, 1.0, 45),
+	SubLoc.NW: SubLocInfo(SubLoc.NW, 0.0, 0.0, 135),
 ];
 
 struct EdgeInfo {
@@ -133,6 +134,7 @@ struct Node {
 	 */
 	Node followReverse(Edge e) const {
 		auto eInfo = EDGE_INFO[e]; 
+		// TODO: assertion fails
 		// assert (eInfo.to == subLoc, "followReverse(...) has wrong toSubLoc");
 		return Node(
 			pos - Point(eInfo.dx, eInfo.dy),
