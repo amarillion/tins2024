@@ -100,6 +100,24 @@ class MainState : DialogBuilder {
 			followMode = !followMode;
 		});
 
+			
+		void makeButton(Component slot, int i, string color) {
+			auto btn = new Button(window);
+			
+			btn.setRelative(
+				80 + 80 * (i % 4), 80 + 40 * (i / 4), 
+				0, 0, 64, 32, LayoutRule.BEGIN, LayoutRule.BEGIN);
+			btn.setLocalStyle(parseJSON(format(`{ "background": "%s" }`, color))); //TODO: alternative without JSON
+			string myColor = color.dup; // duplicate the string to avoid a closure problem
+			btn.onAction.add((e) {
+				import std.stdio;
+				string myColor2 = color.dup;
+				writeln("Seting color: ", myColor, myColor2);
+				isoCanvas.setTrainColor(al_color_name(toStringz(myColor)));
+			});
+			slot.addChild(btn);
+		}
+
 		getElementById("btn_config").onAction.add((e) {
 			auto dialog = new DialogBuilder(window);
 			dialog.buildDialog(window.resources.jsons["customize-dialog"]);
@@ -108,19 +126,11 @@ class MainState : DialogBuilder {
 				"red", "green", "blue", "yellow", 
 				"purple", "orange", "cyan", "magenta", 
 				"white", "black", "gray", "brown",
-				"pink", "lime", "olive", "navy"
+				"pink", "lime", "olive", "navy",
+				"teal", "maroon", "silver", "gold"
 			];
 			foreach (i, color; colors) {
-				auto btn = new Button(window);
-				
-				btn.setRelative(
-					to!int(80 + 80 * (i % 4)), to!int(80 + 40 * (i / 4)), 
-					0, 0, 64, 32, LayoutRule.BEGIN, LayoutRule.BEGIN);
-				btn.setLocalStyle(parseJSON(format(`{ "background": "%s" }`, color))); //TODO: alternative without JSON
-				btn.onAction.add((e) {
-					isoCanvas.setTrainColor(al_color_name(toStringz(color)));
-				});
-				slot.addChild(btn);
+				makeButton(slot, to!int(i), color);
 			}
 		// {
 		// 		"type": "button",

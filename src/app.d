@@ -41,6 +41,7 @@ void main(string[] args)
 		mainloop.resources.addFile("data/dialog-layout.json");
 		mainloop.resources.addFile("data/customize-dialog.json");
 		mainloop.resources.addFile("data/themap.json");
+		mainloop.resources.addFile("data/color-replace.glsl");
 		mainloop.resources.addMusicFile("data/Chattanooga_wip2_loop.ogg");
 		
 		mainloop.resources.addGlob("data/test-map*.json");

@@ -16,6 +16,7 @@ import helix.util.vec;
 import helix.util.coordrange;
 import helix.color;
 import helix.allegro.bitmap;
+import helix.allegro.shader;
 import helix.signal : SignalModel = Model;
 
 import isogrid;
@@ -71,6 +72,8 @@ class IsoCanvas : Component
 	Bitmap[16] wagon;
 	Bitmap[16] locomotive;
 	
+	Shader shader;
+
 	final void initResources() {
 		iso.setTexture(window.resources.bitmaps["tileset"], 64, 64);
 
@@ -100,6 +103,8 @@ class IsoCanvas : Component
 			wagon[i] = wagonSheet.subBitmap(i * 64, 0, 64, 64);
 			locomotive[i] = locomotiveSheet.subBitmap(i * 64, 0, 64, 64);
 		}
+
+		shader = shader.ofFragment(window.resources.shaders["color-replace"]);
 	}
 
 	void done() {
@@ -118,8 +123,12 @@ class IsoCanvas : Component
 
 	void drawTrains(const GraphicsContext gc) {
 		float rx, ry;
+		auto setter = shader.use(true);
 		foreach (train; model.train) {
 			bool first = true;
+
+			setter.withVec3f("original_color", vec!(3, float)(0.674509804f, 0.196078431f, 0.196078431f));
+			setter.withVec3f("replacement_color", vec!(3, float)(train.color.r, train.color.g, train.color.b));
 			foreach (w; train.wagons) {
 				int rotation = to!int((w.angle + 45) * 16.0 / 360.0) % 16;
 				Bitmap s = first ? locomotive[rotation] : wagon[rotation];
@@ -131,6 +140,7 @@ class IsoCanvas : Component
 				first = false;
 			}
 		}
+		shader.use(false);
 
 	}
 
