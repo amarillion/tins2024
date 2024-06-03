@@ -61,9 +61,12 @@ public:
 			current = next;
 		}
 		*/
+	}
+
+	void addTrain() {
 		// create a new Train
-		Node start = links.keys[0];
-		Edge startDir = links[start].keys[0];
+		Node start = choice(links.keys); // random start node
+		Edge startDir = choice(links[start].keys); // random direction
 		auto t = new Train(this, start, startDir);
 		t.wagons ~= Wagon(0, 0, 0);
 		t.wagons ~= Wagon(0, 0, 1);

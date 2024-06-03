@@ -37,7 +37,125 @@
 					"width": 160,
 					"height": 32
 				}
+			},
+
+			{
+				"id": "btn_add_train",
+				"type": "button",
+				"text": "Add Train",
+				"layout": {
+					"rule": "top-right",
+					"top": 48,
+					"right": 8,
+					"width": 160,
+					"height": 32
+				}
+			},
+
+			{
+				"id": "btn_next",
+				"type": "button",
+				"text": "Select Next",
+				"layout": {
+					"rule": "top-right",
+					"top": 88,
+					"right": 8,
+					"width": 160,
+					"height": 32
+				}
+			},
+
+			{
+				"id": "lbl_train_id",
+				"type": "label",
+				"text": "Selected Train: ",
+				"layout": {
+					"rule": "top-right",
+					"top": 128,
+					"right": 8,
+					"width": 160,
+					"height": 32
+				}
+			},
+
+			{
+				"id": "btn_locate",
+				"type": "button",
+				"text": "Locate",
+				"layout": {
+					"rule": "top-right",
+					"top": 168,
+					"right": 8,
+					"width": 160,
+					"height": 32
+				}
+			},
+
+			{
+				"id": "btn_follow",
+				"type": "button",
+				"text": "Follow Toggle",
+				"layout": {
+					"rule": "top-right",
+					"top": 208,
+					"right": 8,
+					"width": 160,
+					"height": 32
+				}
+			},
+
+			{
+				"id": "btn_accelerate",
+				"type": "button",
+				"text": "Accelerate",
+				"layout": {
+					"rule": "top-right",
+					"top": 248,
+					"right": 8,
+					"width": 160,
+					"height": 32
+				}
+			},
+			
+			{
+				"id": "btn_stop",
+				"type": "button",
+				"text": "Stop",
+				"layout": {
+					"rule": "top-right",
+					"top": 288,
+					"right": 8,
+					"width": 160,
+					"height": 32
+				}
+			},
+
+			{
+				"id": "btn_config",
+				"type": "button",
+				"text": "Configure",
+				"layout": {
+					"rule": "top-right",
+					"top": 328,
+					"right": 8,
+					"width": 160,
+					"height": 32
+				}
+			},
+
+			{
+				"id": "img_fole_and_raul",
+				"type": "image",
+				"src": "FoleNRaulTrainBoss-3",
+				"layout": {
+					"rule": "bottom-right",
+					"bottom": 8,
+					"right": 8,
+					"width": 160,
+					"height": 160
+				}
 			}
+
 		]
 	}
 ]

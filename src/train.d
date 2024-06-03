@@ -1,7 +1,12 @@
 module train;
 
 import std.random;
+
+// TODO: remove dependency on allegro here.
+import allegro5.allegro;
+
 import helix.util.vec;
+import helix.color;
 
 import model;
 import map;
@@ -18,6 +23,7 @@ class Train {
 private:
 	Model model;
 public:
+	ALLEGRO_COLOR color = Color.RED;
 	Edge[] trail;
 	Wagon[] wagons;
 
@@ -160,6 +166,16 @@ public:
 		}
 
 		steps += speed;
+	}
+
+	void stop() {
+		speed = 0;
+		max_speed = 0.0f;
+	}
+
+	void accelerate() {
+		max_speed += 0.01f;
+		// No limit. Why would we set a limit :-D
 	}
 
 }

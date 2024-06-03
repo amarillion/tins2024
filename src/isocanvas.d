@@ -16,6 +16,7 @@ import helix.util.vec;
 import helix.util.coordrange;
 import helix.color;
 import helix.allegro.bitmap;
+import helix.signal : SignalModel = Model;
 
 import isogrid;
 import map;
@@ -138,7 +139,7 @@ class IsoCanvas : Component
 		if (!map) return;
 		
 		drawMap(gc, iso, map);
-		drawCursor(gc);
+		// drawCursor(gc); // Unused at the moment
 		drawTrains(gc);
 		
 		foreach(p; PointRange(map.size)) {
@@ -181,6 +182,41 @@ class IsoCanvas : Component
 
 	override void update() {
 		model.update();
+	}
+
+	SignalModel!int selectedTrain = -1;
+
+	Point getSelectedTrainPosition() {
+		if (selectedTrain < 0 || selectedTrain >= model.train.length) return Point(iso.getw() / 2, iso.geth() / 2);
+		auto t = model.train[selectedTrain];
+		
+		float rx, ry;
+		iso.canvasFromIso_f(TILEX * t.getLx(), TILEY * t.getLy(), TILEZ * t.wagons[0].lz, rx, ry);
+
+		return Point(to!int(rx), to!int(ry));
+	}
+
+	void addTrain() {
+		model.addTrain();
+		selectedTrain = to!int(model.train.length) - 1; // will trigger location update
+	}
+
+	void nextTrain() {
+		if (model.train.length == 0) {
+			selectedTrain = -1;
+			return;
+		}
+		selectedTrain = to!int((selectedTrain + 1) % model.train.length);
+	}
+
+	void stopTrain() {
+		if (selectedTrain < 0 || selectedTrain >= model.train.length) return;
+		model.train[selectedTrain].stop();
+	}
+
+	void accelerateTrain() {
+		if (selectedTrain < 0 || selectedTrain >= model.train.length) return;
+		model.train[selectedTrain].accelerate();
 	}
 
 }
