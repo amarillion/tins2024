@@ -116,15 +116,13 @@ public:
 
 			wagon.lz = getLz(model, wagLoc, wagDir, wagSteps);
 
-			// if (isDead) {
-			// 	// quick hack to make it appear jumbled up
-			// 	wagon.angle = wagSteps;
-			// }
-			// else {
+			if (isDead) {
+				// quick hack to make it appear jumbled up
+				wagon.angle = wagSteps * 100.0;
+			}
+			else {
 				wagon.angle = getAngle(wagDir, wagSteps);
-			// }
-			// import std.stdio;
-			// writeln("wagon angle: ", wagon.angle);
+			}
 
 			if (trailIt < trail.length) {
 				// advance on trail...
