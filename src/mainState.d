@@ -3,8 +3,10 @@ module mainState;
 import std.json;
 import std.conv;
 import std.format;
+import std.string;
 
 import allegro5.shader;
+import allegro5.allegro_color;
 
 import helix.resources;
 import helix.mainloop;
@@ -13,12 +15,14 @@ import helix.component;
 import helix.scroll;
 import helix.layout;
 import helix.util.vec;
+import helix.widgets;
 
 import dialog;
 import dialogBuilder;
 import isocanvas;
 import map;
 import model;
+import core.sys.posix.fcntl;
 
 class MainState : DialogBuilder {
 
@@ -97,7 +101,50 @@ class MainState : DialogBuilder {
 		});
 
 		getElementById("btn_config").onAction.add((e) {
-			// TODO
+			auto dialog = new DialogBuilder(window);
+			dialog.buildDialog(window.resources.jsons["customize-dialog"]);
+			auto slot = dialog.getElementById("div_slot");
+			string[] colors = [
+				"red", "green", "blue", "yellow", 
+				"purple", "orange", "cyan", "magenta", 
+				"white", "black", "gray", "brown",
+				"pink", "lime", "olive", "navy"
+			];
+			foreach (i, color; colors) {
+				auto btn = new Button(window);
+				
+				btn.setRelative(
+					to!int(80 + 80 * (i % 4)), to!int(80 + 40 * (i / 4)), 
+					0, 0, 64, 32, LayoutRule.BEGIN, LayoutRule.BEGIN);
+				btn.setLocalStyle(parseJSON(format(`{ "background": "%s" }`, color))); //TODO: alternative without JSON
+				btn.onAction.add((e) {
+					isoCanvas.setTrainColor(al_color_name(toStringz(color)));
+				});
+				slot.addChild(btn);
+			}
+		// {
+		// 		"type": "button",
+		// 		"id": "btn_color_1",
+		// 		"text": "",
+		// 		"style": {
+		// 			"background": "red"
+		// 		},
+		// 		"layout": {
+		// 			"rule": "top-left",
+		// 			"left": 80,
+		// 			"top": 80,
+		// 			"width": 64,
+		// 			"height": 32
+		// 		}
+		// 	},
+
+
+
+			dialog.getElementById("btn_ok").onAction.add(
+				(e) { window.popScene(); }
+			);
+
+			window.pushScene(dialog);
 		});
 
 	}

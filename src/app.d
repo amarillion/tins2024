@@ -39,6 +39,7 @@ void main(string[] args)
 		mainloop.resources.addFile("data/style.json");
 		mainloop.resources.addFile("data/title-layout.json");
 		mainloop.resources.addFile("data/dialog-layout.json");
+		mainloop.resources.addFile("data/customize-dialog.json");
 		mainloop.resources.addFile("data/themap.json");
 		mainloop.resources.addMusicFile("data/Chattanooga_wip2_loop.ogg");
 		

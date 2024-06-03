@@ -219,4 +219,8 @@ class IsoCanvas : Component
 		model.train[selectedTrain].accelerate();
 	}
 
+	void setTrainColor(ALLEGRO_COLOR color) {
+		if (selectedTrain < 0 || selectedTrain >= model.train.length) return;
+		model.train[selectedTrain].color = color;
+	}
 }
