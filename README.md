@@ -10,6 +10,14 @@ tech rule #98: use a quadratic formula (i.e. ax^2 + bx + c) somewhere in the gam
 
 bonus rule #22: Act of "Cool Story, Bro": skip one rule by explaining how totally awesome the idea was that you were going to implement but unfortunately didn't have time for...
 
+## Sources ##
+
+Github Copilot was used to assist programming of this submission.
+
+Collision sound effect derived from: https://freesound.org/people/LPHypeR/sounds/646185/ (CC0)
+
+Toot sound effect derived from: https://freesound.org/people/NLM/sounds/267986/ (CC BY 4.0 NC)
+
 ## Source code & Dependencies
 
 You can find the source code for this program on github:

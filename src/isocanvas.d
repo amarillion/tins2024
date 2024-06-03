@@ -2,6 +2,7 @@ module isocanvas;
 
 import std.stdio;
 import std.conv;
+import std.algorithm.searching;
 
 import allegro5.allegro;
 import allegro5.allegro_primitives;
@@ -9,6 +10,7 @@ import allegro5.allegro_image;
 import allegro5.allegro_font;
 import allegro5.allegro_ttf;
 import allegro5.allegro_color;
+import allegro5.allegro_audio;
 
 import helix.mainloop;
 import helix.component;
@@ -22,6 +24,8 @@ import helix.signal : SignalModel = Model;
 import isogrid;
 import map;
 import model;
+import std.checkedint;
+import std.encoding;
 
 enum NUM_BUILDINGS = 21;
 
@@ -64,6 +68,24 @@ class IsoCanvas : Component
 		map = model.mapTT;
 		iso = new IsoGrid(map.size.x, map.size.y, 20, TILEX, TILEZ);
 		initResources();
+
+		model.highlightTrain.add((e) {
+			selectedTrain = to!int(model.train.countUntil(e));
+		});
+
+		model.sfx.add((e) {
+			playSfx(e);
+		});
+	}
+
+	void playSfx(string e) {
+		auto sfx = window.resources.samples[e];
+		if (sfx) {
+			al_play_sample(sfx.ptr, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE.ALLEGRO_PLAYMODE_ONCE, null);
+		}
+		else {
+			writeln("SFX not found: ", e);
+		}
 	}
 
 	Bitmap[18] tracks;

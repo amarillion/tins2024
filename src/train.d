@@ -1,7 +1,8 @@
 module train;
 
 import std.random;
-
+import std.algorithm;
+import std.range;
 // TODO: remove dependency on allegro here.
 import allegro5.allegro;
 
@@ -12,11 +13,11 @@ import model;
 import map;
 
 struct Wagon {
-	float lx;
-	float ly;
-	float lz;
-	float angle;
-	int spriteIdx;
+	float lx = 0.0;
+	float ly = 0.0;
+	float lz = 0.0;
+	float angle = 0.0;
+	int spriteIdx = 0;
 }
 
 class Train {
@@ -27,7 +28,11 @@ public:
 	Edge[] trail;
 	Wagon[] wagons;
 
+	bool isDead = false; // after collision...
+
 	int id = -1;
+	static int nextId = 1;
+
 	Edge dir;
 
 	float speed = 0.0f;
@@ -39,9 +44,12 @@ public:
 	float steps = 1.0f; // after steps > 1.0, we arrive at the next node
 
 	this(Model _model, Node startNode, Edge startDir) {
+		this.id = nextId++;
 		this.model = _model;
 		this.node = startNode;
 		this.dir = startDir;
+		import std.stdio;
+		writefln("Created train with id: %s", id);
 	}
 
 	static float getAngle(Edge dir, float steps) {
@@ -90,8 +98,33 @@ public:
 		foreach (ref wagon; wagons) {
 			wagon.lx = wagLx;
 			wagon.ly = wagLy;
+			
+			// collision test
+			if (!isDead && wagLoc.pos in model.collisionMap) {
+				auto otherId = model.collisionMap[wagLoc.pos];
+				if (otherId != id) {
+					auto otherTrain = model.train.find!(a => a.id == otherId)();
+					if (!otherTrain.empty) {
+						model.onCollision(this, otherTrain.front);
+					}
+					
+				}
+				
+			}
+			// we still want to update collision map, even if dead...
+			model.collisionMap[wagLoc.pos] = id;
+
 			wagon.lz = getLz(model, wagLoc, wagDir, wagSteps);
-			wagon.angle = getAngle(wagDir, wagSteps);
+
+			// if (isDead) {
+			// 	// quick hack to make it appear jumbled up
+			// 	wagon.angle = wagSteps;
+			// }
+			// else {
+				wagon.angle = getAngle(wagDir, wagSteps);
+			// }
+			// import std.stdio;
+			// writeln("wagon angle: ", wagon.angle);
 
 			if (trailIt < trail.length) {
 				// advance on trail...
@@ -127,12 +160,18 @@ public:
 	}
 
 	void doMove() {
-		speed += acceleration;
-		if (speed > max_speed)
-		{
-			speed = max_speed;
+		if (!isDead) {
+			speed += acceleration;
+			if (speed > max_speed)
+			{
+				speed = max_speed;
+			}
+		}
+		else {
+			speed = 0;
 		}
 
+		// we still want to update collision map, even if dead...
 		recalcWagons();
 
 		if (steps + speed >= EDGE_INFO[dir].length)
@@ -175,7 +214,7 @@ public:
 
 	void accelerate() {
 		max_speed += 0.01f;
-		// No limit. Why would we set a limit :-D
+		// No limit. Why would we set a limit? :-D
 	}
 
 }

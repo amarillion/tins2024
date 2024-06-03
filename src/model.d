@@ -3,8 +3,12 @@ module model;
 import std.random;
 import std.json;
 import std.conv;
+import std.algorithm;
+import std.array;
 
 import helix.util.vec;
+import helix.signal;
+import helix.color;
 
 import map;
 import readMap;
@@ -68,12 +72,13 @@ public:
 		Node start = choice(links.keys); // random start node
 		Edge startDir = choice(links[start].keys); // random direction
 		auto t = new Train(this, start, startDir);
-		t.wagons ~= Wagon(0, 0, 0);
-		t.wagons ~= Wagon(0, 0, 1);
-		t.wagons ~= Wagon(0, 0, 1);
-		t.wagons ~= Wagon(0, 0, 1);
-		t.wagons ~= Wagon(0, 0, 1);
+		t.wagons ~= Wagon();
+		t.wagons ~= Wagon();
+		t.wagons ~= Wagon();
+		t.wagons ~= Wagon();
+		t.wagons ~= Wagon();
 		train ~= t;
+		sfx.dispatch("toot");
 	}
 
 	int addCity(int mx, int my, string name) {
@@ -99,12 +104,34 @@ public:
 		return false;
 	}
 
+	int[Point] collisionMap;
+
 	void update() {
 		tick++;
-
+		
+		// start with a fresh map
+		collisionMap.clear();
 		foreach(t; train) {
 			t.doMove();
 		}
+
+		// train = train.filter!(t => !t.isDead).array; // TODO: delete after a while?
+	}
+
+	Signal!string sfx = Signal!string();
+	Signal!Train highlightTrain = Signal!Train();
+
+	void onCollision(Train a, Train b) {
+		import std.stdio;
+		writefln("Collision between %s and %s", a, b);
+		// delete the trains...
+		// TODO... set a delay?
+		a.isDead = true;
+		a.color = Color.BLACK;
+		b.isDead = true;
+		b.color = Color.BLACK;
+		sfx.dispatch("collision");
+		highlightTrain.dispatch(a);
 	}
 
 	int getSubNodeZ(Point p, int subnode) {

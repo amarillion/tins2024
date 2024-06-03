@@ -67,7 +67,8 @@ class MainState : DialogBuilder {
 			RichTextBuilder builder = new RichTextBuilder()
 				.h1("TINS 2024 game")
 				.text("This was made by ").b("Amarillion, Max and AniCator")
-				.text(" during the TINS 2024 Game Jam!").p();
+				.text(" during the TINS 2024 Game Jam!").p()
+				.text("Some sound effects come with attributions, see the README for details").p();
 			openDialog(window, builder.build());
 		});
 
@@ -125,30 +126,13 @@ class MainState : DialogBuilder {
 			string[] colors = [
 				"red", "green", "blue", "yellow", 
 				"purple", "orange", "cyan", "magenta", 
-				"white", "black", "gray", "brown",
+				"white", "gray", "brown", "beige",
 				"pink", "lime", "olive", "navy",
 				"teal", "maroon", "silver", "gold"
 			];
 			foreach (i, color; colors) {
 				makeButton(slot, to!int(i), color);
 			}
-		// {
-		// 		"type": "button",
-		// 		"id": "btn_color_1",
-		// 		"text": "",
-		// 		"style": {
-		// 			"background": "red"
-		// 		},
-		// 		"layout": {
-		// 			"rule": "top-left",
-		// 			"left": 80,
-		// 			"top": 80,
-		// 			"width": 64,
-		// 			"height": 32
-		// 		}
-		// 	},
-
-
 
 			dialog.getElementById("btn_ok").onAction.add(
 				(e) { window.popScene(); }
