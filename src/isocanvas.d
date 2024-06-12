@@ -24,7 +24,6 @@ import helix.signal : SignalModel = Model;
 import isogrid;
 import map;
 import model;
-import std.checkedint;
 import std.encoding;
 
 enum NUM_BUILDINGS = 21;

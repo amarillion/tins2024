@@ -7,7 +7,6 @@ module map;
 
 import std.conv;
 import std.algorithm;
-import std.math.constants : PI;
 import std.math;
 
 import helix.util.grid;
@@ -15,6 +14,8 @@ import helix.util.vec;
 import helix.util.coordrange;
 
 import isogrid : Cell;
+
+enum PI = 3.1415927;
 
 /**
  * the subloc is a sub-tile-location, and it is the starting position of an edge.
