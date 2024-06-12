@@ -7,7 +7,7 @@ import allegro5.allegro_image;
 
 import helix.allegro.bitmap;
 
-import std.math.constants : PI;
+import std.math;
 
 Bitmap readSpriteSheet(string filename) {
 	auto file = Bitmap.load(filename);

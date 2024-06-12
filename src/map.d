@@ -15,8 +15,6 @@ import helix.util.coordrange;
 
 import isogrid : Cell;
 
-enum PI = 3.1415927;
-
 /**
  * the subloc is a sub-tile-location, and it is the starting position of an edge.
  * For example, SubLoc::N means that you are starting from the center-top of a tile, facing south
